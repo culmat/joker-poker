@@ -2,13 +2,13 @@
   "name": "Joker Poker",
   "short_name": "JPoker",
   "lang": "en",
-  "start_url": "/",
+  "start_url": "https://github.com/culmat/joker-poker/",
   "display": "fullscreen",
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "https://culmat.github.io/joker-poker/joker-poker-logo.svg",
-      "type": "image/svg+xml"
+      "src": "https://culmat.github.io/joker-poker/joker-poker-logo.png",
+      "type": "image/png"
     }
   ]
 }
