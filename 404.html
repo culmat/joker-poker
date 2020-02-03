@@ -2,6 +2,11 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <!--
+    Set the base to / for dev with https://github.com/http-party/http-server/
+    <base href="/">
+    -->
+    <base href="/joker-poker/">
     <link rel="manifest" href="manifest.json">
 
     <meta name="mobile-web-app-capable" content="yes">
@@ -16,11 +21,100 @@
 
     <link rel="icon" type="image/svg+xml" href="https://culmat.github.io/joker-poker/joker-poker-logo.png">
     <link rel="apple-touch-icon" type="image/svg+xml" href="https://culmat.github.io/joker-poker/joker-poker-logo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+
     <title>Joker Poker</title>
 
 
   </head>
   <body>
-    Joker Poker
+
+    <div id="app">
+    <v-app>
+      <div>
+          <v-app-bar
+            color="deep-purple accent-4"
+            dark
+          >
+
+            <v-toolbar-title>Joker Poker #{{sessionId}}</v-toolbar-title>
+
+            <v-spacer></v-spacer>
+            <v-chip :color="connected ? 'green' : 'grey'">Connected</v-chip>
+
+            <v-menu
+            left
+            bottom
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item
+                v-for="n in pages"
+                :key="n"
+                @click="(e) => {navigate(e);}"
+              >
+                <v-list-item-title>{{ n }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
+          </v-app-bar>
+        </div>
+
+
+                      <v-content>
+
+                        <v-row justify="center">
+                                <v-dialog v-model="dialog" persistent max-width="600px">
+                                  <v-card>
+                                    <v-card-title>
+                                      <span class="headline">Join or create session</span>
+                                    </v-card-title>
+                                    <v-card-text>
+                                      <v-container>
+                                        <v-row>
+                                          <v-col cols="12">
+                                            <v-text-field v-model="sessionIdInput" label="Session ID" required></v-text-field>
+                                          </v-col>
+                                        </v-row>
+                                      </v-container>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                      <v-spacer></v-spacer>
+                                      <v-btn color="blue darken-1" text @click="dialog = false;join(false)" :disabled="sessionIdInput == ''">Join</v-btn>
+                                      <v-btn color="blue darken-1" text @click="dialog = false;join(true)">Create</v-btn>
+                                    </v-card-actions>
+                                  </v-card>
+                                </v-dialog>
+                              </v-row>
+
+                    <div v-if="page =='Home'">
+                      <v-text-field v-model="messageInput" label="Message"></v-text-field>
+                      <v-btn color="blue darken-1" text @click="send()">send</v-btn>
+                      <br/>
+                      <pre>{{lastMessage}}</pre>
+
+                    </div>
+                    <div v-if="page =='Cluster'">
+                      <pre>{{yaiID}} : {{isLeader}}</pre>
+                      <pre>{{clusterState}}</pre>
+                    </div>
+                    </v-content>
+    </v-app>
+    </div>
+
+    <script src="https://baloise.github.io/MobRank/youandi.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="joker-poker.js"></script>
+
   </body>
+
 </html>
