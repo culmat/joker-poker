@@ -21,8 +21,8 @@
 
     <link rel="icon" type="image/svg+xml" href="https://culmat.github.io/joker-poker/joker-poker-logo.png">
     <link rel="apple-touch-icon" type="image/svg+xml" href="https://culmat.github.io/joker-poker/joker-poker-logo.png">
-
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 
     <title>Joker Poker</title>
@@ -38,8 +38,8 @@
             color="deep-purple accent-4"
             dark
           >
-
-            <v-toolbar-title>Joker Poker #{{sessionId}}</v-toolbar-title>
+            <v-icon>{{pageIcon}}</v-icon>
+            <v-toolbar-title>&nbsp;{{session.name}}</v-toolbar-title>
 
             <v-spacer></v-spacer>
             <v-chip :color="connected ? 'green' : 'grey'">Connected</v-chip>
@@ -58,9 +58,14 @@
               <v-list-item
                 v-for="n in pages"
                 :key="n"
-                @click="(e) => {navigate(e);}"
+                @click="(e) => {navigate(n[0],n[1]);}"
+                v-if="page != n[0]"
               >
-                <v-list-item-title>{{ n }}</v-list-item-title>
+              <v-list-item-action>
+                  <v-icon :color="page == n[0] ? 'blue darken-2': ''">{{n[1]}}</v-icon>
+                </v-list-item-action>
+
+                <v-list-item-title>{{ n[0] }}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -70,7 +75,6 @@
 
 
                       <v-content>
-
                         <v-row justify="center">
                                 <v-dialog v-model="dialog" persistent max-width="600px">
                                   <v-card>
@@ -95,24 +99,77 @@
                                 </v-dialog>
                               </v-row>
 
-                    <div v-if="page =='Home'">
+                    <div v-if="page =='Team'">
                       <v-text-field v-model="messageInput" label="Message"></v-text-field>
                       <v-btn color="blue darken-1" text @click="send()">send</v-btn>
                       <br/>
                       <pre>{{lastMessage}}</pre>
 
                     </div>
-                    <div v-if="page =='Cluster'">
-                      <pre>{{yaiID}} : {{isLeader}}</pre>
-                      <pre>{{clusterState}}</pre>
+                    <div v-if="page =='Settings'" >
+
+                      <v-card >
+
+                      <v-card-title>Session</v-card-title>
+                      <v-card-text>
+                      <v-form>
+                        <v-text-field @change="sessionChange()"
+                            v-model="session.name"
+                            label="Name"
+                            required
+                          ></v-text-field>
+                        <v-text-field
+                            v-model="sessionId"
+                            label="ID"
+                            required
+                            disabled
+                          ></v-text-field>
+                      <v-form>
+                      </v-card-text>
+                      </v-card>
+
+                      <v-card >
+
+                      <v-card-title>Cluster state</v-card-title>
+                      <v-card-text>
+                      <v-form>
+                        <v-text-field
+                            v-model="yaiID"
+                            label="ID"
+                            required
+                            disabled
+                          ></v-text-field>
+                          <v-switch v-model="isLeader" class="ma-2" disabled label="this node is leader"></v-switch>
+                          <v-text-field
+                              v-model="clusterState.leader"
+                              label="leader"
+                              required
+                              disabled
+                            ></v-text-field>
+                          <v-select
+                              v-model="clusterState.nodes"
+                              :items="clusterState.nodes"
+                              label="nodes"
+                              multiple
+                              chips
+                              persistent-hint
+                              disabled
+                            ></v-select>
+
+                      <v-form>
+                      </v-card-text>
+                      </v-card>
+                    </div>
+                    <div v-if="page =='Me'">
+                      This is me.
                     </div>
                     </v-content>
     </v-app>
     </div>
 
     <script src="https://baloise.github.io/MobRank/youandi.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
     <script src="joker-poker.js"></script>
 
   </body>
