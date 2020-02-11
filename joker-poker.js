@@ -31,9 +31,10 @@ var app = new Vue({
       this.session.time = new Date().getTime();
       yai.send({session : this.session});
     },
-    navigate: function (p,i) {
-      this.page = p || this.page;
-      this.pageIcon = i || this.pageIcon;
+    navigate: function (page,icon) {
+      if(page == this.page) return;
+      this.page = page || this.page;
+      this.pageIcon = icon || this.pageIcon;
       window.history.pushState({page : this.page, sessionId: this.sessionId  }, null, baseHref+this.sessionId +"/"+ this.page);
     },
     syncState: function (create) {
