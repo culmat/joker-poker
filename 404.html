@@ -59,7 +59,6 @@
                 v-for="n in pages"
                 :key="n"
                 @click="(e) => {navigate(n[0],n[1]);}"
-                v-if="page != n[0]"
               >
               <v-list-item-action>
                   <v-icon :color="page == n[0] ? 'blue darken-2': ''">{{n[1]}}</v-icon>
