@@ -4,10 +4,19 @@ var app = new Vue({
   el: '#app',
   vuetify: new Vuetify(),
   data : {
+    myestimate : '',
     sessionIdInput : '',
     dialog : false,
     sessionId : null,
-    session : { name : 'Joker Poker', time : 0},
+    session : {
+      name : 'Joker Poker',
+      time : 0,
+      values : ["☕","1","2","3","5","13","20","40","?"]
+    },
+    me : {
+      id: null,
+      name : ""
+    },
     connected : false,
     lastMessage : '',
     clusterState : {"leader" : "?", "nodes" : []},
@@ -22,6 +31,11 @@ var app = new Vue({
     page : "Team",
     pageIcon : 'fas fa-user-friends',
   },
+  computed: {
+    image: function () {
+      return "https://robohash.org/" + this.me.name;
+    }
+  },
   methods: {
     join: function (create) {
       this.sessionId = yai.setSessionId(create ? yai.uuid() : this.sessionIdInput);
@@ -30,6 +44,9 @@ var app = new Vue({
     sessionChange: function () {
       this.session.time = new Date().getTime();
       yai.send({session : this.session});
+    },
+    meChange: function () {
+      yai.send({me : this.me});
     },
     navigate: function (page,icon) {
       if(page == this.page) return;
@@ -47,14 +64,33 @@ var app = new Vue({
   }
 });
 
+
+
 function loadLocalData(){
   var data = JSON.parse(localStorage.getItem(app.sessionId));
 	if(data && data.session) app.session = data.session;
+  if(data && data.me) {
+    app.me = data.me;
+  } else {
+    axios.get('https://randomuser.me/api/?inc=name&noinfo&nat=us,fr,gb,de,ch')
+      .then(function (response) {
+        app.me.name = response.data.results[0].name.first;
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+        app.me.name = new Date().getTime()
+      });
+  }
+  app.me.id = app.me.id || yai.uuid();
 }
 
 window.onunload  = function(){
   if(!app.sessionId) return;
-	localStorage.setItem(app.sessionId, JSON.stringify({session : app.session}));
+	localStorage.setItem(app.sessionId, JSON.stringify({
+    session : app.session,
+    me : app.me
+  }));
 };
 
 (function(){

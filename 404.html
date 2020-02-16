@@ -5,7 +5,7 @@
     <!--
     Set the base to / for dev with https://github.com/http-party/http-server/
     <base href="/">
-    -->
+  -->
     <base href="/joker-poker/">
     <link rel="manifest" href="manifest.json">
 
@@ -25,6 +25,8 @@
     <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <title>Joker Poker</title>
 
 
@@ -43,7 +45,17 @@
 
             <v-spacer></v-spacer>
             <v-chip :color="connected ? 'green' : 'grey'">Connected</v-chip>
-
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-avatar v-on="on">
+                  <img
+                    :src="image"
+                    :alt="me.name"
+                  >
+                </v-avatar>
+              </template>
+              <span>{{me.name}}</span>
+            </v-tooltip>
             <v-menu
             left
             bottom
@@ -108,8 +120,7 @@
                     <div v-if="page =='Settings'" >
 
                       <v-card >
-
-                      <v-card-title>Session</v-card-title>
+                      <v-card-title>Team</v-card-title>
                       <v-card-text>
                       <v-form>
                         <v-text-field @change="sessionChange()"
@@ -117,12 +128,47 @@
                             label="Name"
                             required
                           ></v-text-field>
+
+                          <v-combobox
+                            v-model="session.values"
+
+                            label="Values"
+                            multiple
+                            chips
+                          ></v-combobox>
+
+
                         <v-text-field
                             v-model="sessionId"
                             label="ID"
                             required
                             disabled
                           ></v-text-field>
+                      <v-form>
+                      </v-card-text>
+                      </v-card>
+
+                      <v-card >
+                      <v-card-title>Me</v-card-title>
+                      <v-card-text>
+                      <v-form>
+                        <v-text-field @change="meChange()"
+                            v-model="me.name"
+                            label="Name"
+                            required
+                          ></v-text-field>
+                          <v-avatar>
+                            <img
+                              :src="image"
+                              :alt="me.name"
+                            >
+                          </v-avatar>
+                          <v-text-field
+                              v-model="app.me.id"
+                              label="ID"
+                              required
+                              disabled
+                            ></v-text-field>
                       <v-form>
                       </v-card-text>
                       </v-card>
@@ -160,7 +206,13 @@
                       </v-card>
                     </div>
                     <div v-if="page =='Me'">
-                      This is me.
+                      <v-radio-group v-model="myestimate" :mandatory="false">
+                        <v-radio
+                          v-for="v in session.values"
+                          :label="v"
+                          :value="v">
+                        </v-radio>
+                      </v-radio-group>
                     </div>
                     </v-content>
     </v-app>
