@@ -15,8 +15,13 @@ var app = new Vue({
     },
     me : {
       id: null,
-      name : ""
+      name : "",
+      image : "",
     },
+    estimate : [
+    	["1771" , "Amy", "https://robohash.org/Amy", "..."],
+    	["1C88" , "Harry", "https://robohash.org/Harry", "..."],
+    ],
     connected : false,
     lastMessage : '',
     clusterState : {"leader" : "?", "nodes" : []},
@@ -33,7 +38,9 @@ var app = new Vue({
   },
   computed: {
     image: function () {
-      return "https://robohash.org/" + this.me.name;
+      // TODO watch name
+      this.me.image = "https://robohash.org/" + this.me.name;
+      return this.me.image;
     }
   },
   methods: {
@@ -80,7 +87,11 @@ function loadLocalData(){
         // handle error
         console.log(error);
         app.me.name = new Date().getTime()
-      });
+      })
+     .then(function () {
+    	 app.navigate("Settings");
+     });
+    
   }
   app.me.id = app.me.id || yai.uuid();
 }
@@ -115,7 +126,7 @@ yai.setSessionId = function (id) {
     app.sessionId = id;
     loadLocalData();
     app.navigate();
-		return id;
+	return id;
 };
 
 yai .addListener("clusterChange" , app.syncState)
@@ -125,6 +136,7 @@ yai .addListener("clusterChange" , app.syncState)
     .addListener("connect" , function() {
       app.connected = true;
       yai.send({session : app.session});
+      yai.send({mate : app.me});
     })
     .addListener("message" , function(data) {
       if(data.session && data.session.time > app.session.time) {

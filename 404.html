@@ -111,11 +111,25 @@
                               </v-row>
 
                     <div v-if="page =='Team'">
+					  <v-card>
+					  <v-list>
+					    <v-list-item v-for="e in estimate">
+					       <v-list-item-icon>
+         						<v-icon color="pink">mdi-star</v-icon>
+        				  </v-list-item-icon>
+					      <v-list-item-content>
+					        <v-list-item-title>{{e[1]}}</v-list-item-title>
+					      </v-list-item-content>
+						  <v-list-item-avatar>
+					        <v-img :src="e[2]"></v-img>
+					      </v-list-item-avatar>
+					    </v-list-item>
+					    </v-list>
+					    </v-card>
                       <v-text-field v-model="messageInput" label="Message"></v-text-field>
                       <v-btn color="blue darken-1" text @click="send()">send</v-btn>
                       <br/>
                       <pre>{{lastMessage}}</pre>
-
                     </div>
                     <div v-if="page =='Settings'" >
 
