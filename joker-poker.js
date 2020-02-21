@@ -4,6 +4,7 @@ var app = new Vue({
   el: '#app',
   vuetify: new Vuetify(),
   data : {
+	disableWatch : 0,
     myestimate : '',
     sessionIdInput : '',
     dialog : false,
@@ -17,11 +18,10 @@ var app = new Vue({
       id: null,
       name : "",
       image : "",
+      observer : false,
     },
-    estimate : [
-    	["1771" , "Amy", "https://robohash.org/Amy", "..."],
-    	["1C88" , "Harry", "https://robohash.org/Harry", "..."],
-    ],
+    estimate : {
+    },
     connected : false,
     lastMessage : '',
     clusterState : {"leader" : "?", "nodes" : []},
@@ -35,25 +35,35 @@ var app = new Vue({
     ],
     page : "Team",
     pageIcon : 'fas fa-user-friends',
-  },
-  computed: {
-    image: function () {
-      // TODO watch name
-      this.me.image = "https://robohash.org/" + this.me.name;
-      return this.me.image;
-    }
+  }, 
+  watch: {
+	 me: {
+      deep: true,
+      handler(){
+    	  if(this.disableWatch) {
+   		   	this.disableWatch--
+    	  } else {    	
+	    	this.me.image = "https://robohash.org/" + this.me.name;
+	    	yai.send({mate : this.me})
+    	  }
+      }
+    },
+    session: {
+    	deep: true,
+    	handler(){
+    	   if(this.disableWatch) {
+    		   this.disableWatch--
+    	   } else {    		   
+    		   this.session.time = new Date().getTime();
+    		   yai.send({session : this.session});
+    	   }	
+    	}
+    },
   },
   methods: {
     join: function (create) {
       this.sessionId = yai.setSessionId(create ? yai.uuid() : this.sessionIdInput);
       yai.connect();
-    },
-    sessionChange: function () {
-      this.session.time = new Date().getTime();
-      yai.send({session : this.session});
-    },
-    meChange: function () {
-      yai.send({me : this.me});
     },
     navigate: function (page,icon) {
       if(page == this.page) return;
@@ -93,7 +103,8 @@ function loadLocalData(){
      });
     
   }
-  app.me.id = app.me.id || yai.uuid();
+  app.me.id = app.me.id || "m"+yai.uuid("");
+  if(!app.me.observer) Vue.set(app.estimate, app.me.id, app.me);
 }
 
 window.onunload  = function(){
@@ -130,22 +141,37 @@ yai.setSessionId = function (id) {
 };
 
 yai .addListener("clusterChange" , app.syncState)
-    .addListener("onboard" , function(yai) {
-      yai.send({session : app.session});
+    .addListener("onboard" , function() {
+      this.send({session : app.session});
+      this.send({estimate : app.estimate});
     })
     .addListener("connect" , function() {
       app.connected = true;
-      yai.send({session : app.session});
-      yai.send({mate : app.me});
+      this.send({session : app.session});
+      this.send({mate : app.me});
     })
     .addListener("message" , function(data) {
-      if(data.session && data.session.time > app.session.time) {
-        app.session = data.session;
+      console.log(data);	
+      if(data.session) {
+    	  if(data.session.time > app.session.time) {    		  
+    		  app.disableWatch++
+    		  app.session = data.session;
+    	  }
+      } else if(data.mate) {
+    	  if(data.mate.observer) {
+    		  // remote
+    	  } else {
+    		  Vue.set(app.estimate, data.mate.id, data.mate);    		  
+    	  }
+      } else if(data.estimate) {
+    	  app.disableWatch++
+		  app.estimate = data.estimate;
       } else {
         app.lastMessage = data;
       }
     })
-    .addListener("disconnect" , function(yai) {
+    .addListener("disconnect" , function() {
       app.connected = false;
     })
     .connect();
+

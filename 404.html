@@ -49,7 +49,7 @@
               <template v-slot:activator="{ on }">
                 <v-avatar v-on="on">
                   <img
-                    :src="image"
+                    :src="me.image"
                     :alt="me.name"
                   >
                 </v-avatar>
@@ -113,16 +113,21 @@
                     <div v-if="page =='Team'">
 					  <v-card>
 					  <v-list>
-					    <v-list-item v-for="e in estimate">
+					    <v-list-item v-for="(mate, id) in estimate">
 					       <v-list-item-icon>
          						<v-icon color="pink">mdi-star</v-icon>
         				  </v-list-item-icon>
 					      <v-list-item-content>
-					        <v-list-item-title>{{e[1]}}</v-list-item-title>
+					        <v-list-item-title>{{mate.name}} {{id}}</v-list-item-title>
 					      </v-list-item-content>
 						  <v-list-item-avatar>
-					        <v-img :src="e[2]"></v-img>
+					        <v-img :src="mate.img"></v-img>
 					      </v-list-item-avatar>
+					      <v-list-item-action v-if="id==me.id" @click="navigate('Me')">
+				          <v-btn icon>
+				            <v-icon color="grey lighten-1">fas fa-user</v-icon>
+				          </v-btn>
+				        </v-list-item-action>
 					    </v-list-item>
 					    </v-list>
 					    </v-card>
@@ -137,7 +142,7 @@
                       <v-card-title>Team</v-card-title>
                       <v-card-text>
                       <v-form>
-                        <v-text-field @change="sessionChange()"
+                        <v-text-field
                             v-model="session.name"
                             label="Name"
                             required
@@ -166,14 +171,15 @@
                       <v-card-title>Me</v-card-title>
                       <v-card-text>
                       <v-form>
-                        <v-text-field @change="meChange()"
+                      	<v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
+                        <v-text-field
                             v-model="me.name"
                             label="Name"
                             required
                           ></v-text-field>
                           <v-avatar>
                             <img
-                              :src="image"
+                              :src="me.image"
                               :alt="me.name"
                             >
                           </v-avatar>
