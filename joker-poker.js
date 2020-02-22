@@ -36,6 +36,20 @@ var app = new Vue({
     page : "Team",
     pageIcon : 'fas fa-user-friends',
   },
+  computed: {
+    estimateCount: function () {
+      var count = 0;
+      for (var mate in this.estimates) {
+        if(this.estimates[mate].estimate != '') {
+          count++;
+        }
+      }
+      return count;
+    },
+    estimateProgress: function () {
+      return 100 * this.estimateCount / Object.keys(this.estimates).length;
+    }
+  },
   watch: {
     myestimate: {
        handler(){

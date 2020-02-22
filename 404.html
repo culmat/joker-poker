@@ -37,7 +37,7 @@
     <v-app>
       <div>
           <v-app-bar
-            color="deep-purple accent-4"
+            color="primary"
             dark
           >
             <v-icon>{{pageIcon}}</v-icon>
@@ -80,7 +80,15 @@
               </v-list-item>
             </v-list>
           </v-menu>
-
+          <v-progress-linear
+            absolute
+            bottom
+            rounded
+            height="6"
+            background-color="primary"
+            color="green"
+            :value="estimateProgress"
+          ></v-progress-linear>
           </v-app-bar>
         </div>
 
@@ -111,21 +119,28 @@
                               </v-row>
 
                     <div v-if="page =='Team'">
-					  <v-card>
-					  <v-list>
-					    <v-list-item v-for="(mate, id) in estimates">
-					       <v-list-item-icon>
-         						 <v-btn rounded :disabled="id!=me.id" @click="navigate('Me')">{{mate.estimate}}</v-btn>
-        				  </v-list-item-icon>
-					      <v-list-item-content>
-					        <v-list-item-title>{{mate.name}}</v-list-item-title>
-					      </v-list-item-content>
-						  <v-list-item-avatar>
-					        <v-img :src="mate.image"></v-img>
-					      </v-list-item-avatar>
-					    </v-list-item>
-					    </v-list>
-					    </v-card>
+        					  <v-card>
+        					  <v-list>
+        					    <v-list-item v-for="(mate, id) in estimates">
+        					       <v-list-item-icon>
+                            <v-chip v-if="id!=me.id"
+                            :outlined="mate.estimate==''"
+                            >{{mate.estimate}}</v-chip>
+                            <v-chip v-if="id==me.id"
+                              @click="navigate('Me')"
+                              color="primary"
+                              :outlined="mate.estimate==''"
+                            >{{mate.estimate}}</v-chip>
+                				  </v-list-item-icon>
+        					      <v-list-item-content>
+        					        <v-list-item-title>{{mate.name}}</v-list-item-title>
+        					      </v-list-item-content>
+        						  <v-list-item-avatar>
+        					        <v-img :src="mate.image"></v-img>
+        					      </v-list-item-avatar>
+        					    </v-list-item>
+        					    </v-list>
+        					    </v-card>
                       <v-text-field v-model="messageInput" label="Message"></v-text-field>
                       <v-btn color="blue darken-1" text @click="send()">send</v-btn>
                       <br/>
