@@ -20,7 +20,7 @@ var app = new Vue({
       image : "",
       observer : false,
     },
-    estimate : {
+    estimates : {
     },
     connected : false,
     lastMessage : '',
@@ -37,15 +37,29 @@ var app = new Vue({
     pageIcon : 'fas fa-user-friends',
   },
   watch: {
+    myestimate: {
+       handler(){
+         if(this.myestimate) {
+           this.navigate('Team');
+           this.setEstimate(this.me.id, this.myestimate);
+           yai.send({estimate : {id : this.me.id,  estimate : this.myestimate }});
+         } else {
+           this.navigate('Me');
+         }
+       }
+   },
 	 me: {
       deep: true,
       handler(){
     	  if(this.disableWatch) {
    		   	this.disableWatch--
     	  } else {
-          this.disableWatch++
-  	    	this.me.image = "https://robohash.org/" + this.me.name;
-  	    	yai.send({mate : this.me})
+          const imgUrl = "https://robohash.org/" + this.me.name;
+          if(this.me.image != imgUrl){
+            this.disableWatch++
+    	    	this.me.image = imgUrl;
+          }
+  	    	this.sendMate();
     	  }
       }
     },
@@ -77,8 +91,22 @@ var app = new Vue({
       this.clusterState = yai.clusterState;
       this.isLeader = yai.isLeader;
     },
+    sendMate : function() {
+      yai.send({mate : Object.assign(this.me, {estimate : this.myestimate, yaiID : this.yaiID})})
+    },
+    removeMate : function(yaiID) {
+      for (var mate in this.estimates) {
+        const m = this.estimates[mate];
+        if(m.yaiID == yaiID) {
+          Vue.delete(this.estimates, m.id);
+        }
+      }
+    },
     send: function () {
       yai.send(this.messageInput);
+    },
+    setEstimate: function (id, estimate) {
+      this.estimates[id].estimate = estimate;
     },
   }
 });
@@ -106,7 +134,7 @@ function loadLocalData(){
 
   }
   app.me.id = app.me.id || "m"+yai.uuid("");
-  if(!app.me.observer) Vue.set(app.estimate, app.me.id, app.me);
+  if(!app.me.observer) Vue.set(app.estimates, app.me.id, app.me);
 }
 
 window.onunload  = function(){
@@ -145,12 +173,12 @@ yai.setSessionId = function (id) {
 yai .addListener("clusterChange" , app.syncState)
     .addListener("onboard" , function() {
       this.send({session : app.session});
-      this.send({estimate : app.estimate});
+      this.send({estimates : app.estimates});
     })
     .addListener("connect" , function() {
       app.connected = true;
       this.send({session : app.session});
-      this.send({mate : app.me});
+      app.sendMate();
     })
     .addListener("message" , function(data) {
       console.log(data);
@@ -161,17 +189,23 @@ yai .addListener("clusterChange" , app.syncState)
     	  }
       } else if(data.mate) {
     	  if(data.mate.observer) {
-    		  // remote
+    		  app.removeMate(data.mate.yaiID);
     	  } else {
-    		  Vue.set(app.estimate, data.mate.id, data.mate);
+    		  Vue.set(app.estimates, data.mate.id, data.mate);
     	  }
+      } else if(data.estimates) {
+		      app.estimates = data.estimates;
       } else if(data.estimate) {
-		      app.estimate = data.estimate;
+          app.setEstimate(data.estimate.id, data.estimate.estimate)
       } else {
         app.lastMessage = data;
       }
     })
     .addListener("disconnect" , function() {
+      // TODO reconnect with screen
       app.connected = false;
+    })
+    .addListener("bye" , function(yaiID) {
+      app.removeMate(yaiID);
     })
     .connect();
