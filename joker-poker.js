@@ -26,7 +26,6 @@ var app = new Vue({
     lastMessage : '',
     clusterState : {"leader" : "?", "nodes" : []},
     isLeader : false,
-    messageInput : '',
     yaiID : yai.createdAt,
     pages : [
       ['Team' , 'fas fa-user-friends'] ,
@@ -115,9 +114,6 @@ var app = new Vue({
           Vue.delete(this.estimates, m.id);
         }
       }
-    },
-    send: function () {
-      yai.send(this.messageInput);
     },
     setEstimate: function (id, estimate) {
       this.estimates[id].estimate = estimate;
