@@ -35,16 +35,17 @@ var app = new Vue({
     ],
     page : "Team",
     pageIcon : 'fas fa-user-friends',
-  }, 
+  },
   watch: {
 	 me: {
       deep: true,
       handler(){
     	  if(this.disableWatch) {
    		   	this.disableWatch--
-    	  } else {    	
-	    	this.me.image = "https://robohash.org/" + this.me.name;
-	    	yai.send({mate : this.me})
+    	  } else {
+          this.disableWatch++
+  	    	this.me.image = "https://robohash.org/" + this.me.name;
+  	    	yai.send({mate : this.me})
     	  }
       }
     },
@@ -53,10 +54,11 @@ var app = new Vue({
     	handler(){
     	   if(this.disableWatch) {
     		   this.disableWatch--
-    	   } else {    		   
+    	   } else {
+           this.disableWatch++
     		   this.session.time = new Date().getTime();
     		   yai.send({session : this.session});
-    	   }	
+    	   }
     	}
     },
   },
@@ -101,7 +103,7 @@ function loadLocalData(){
      .then(function () {
     	 app.navigate("Settings");
      });
-    
+
   }
   app.me.id = app.me.id || "m"+yai.uuid("");
   if(!app.me.observer) Vue.set(app.estimate, app.me.id, app.me);
@@ -151,9 +153,9 @@ yai .addListener("clusterChange" , app.syncState)
       this.send({mate : app.me});
     })
     .addListener("message" , function(data) {
-      console.log(data);	
+      console.log(data);
       if(data.session) {
-    	  if(data.session.time > app.session.time) {    		  
+    	  if(data.session.time > app.session.time) {
     		  app.disableWatch++
     		  app.session = data.session;
     	  }
@@ -161,11 +163,10 @@ yai .addListener("clusterChange" , app.syncState)
     	  if(data.mate.observer) {
     		  // remote
     	  } else {
-    		  Vue.set(app.estimate, data.mate.id, data.mate);    		  
+    		  Vue.set(app.estimate, data.mate.id, data.mate);
     	  }
       } else if(data.estimate) {
-    	  app.disableWatch++
-		  app.estimate = data.estimate;
+		      app.estimate = data.estimate;
       } else {
         app.lastMessage = data;
       }
@@ -174,4 +175,3 @@ yai .addListener("clusterChange" , app.syncState)
       app.connected = false;
     })
     .connect();
-
