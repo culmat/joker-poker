@@ -34,17 +34,53 @@
 
     <div id="app">
     <v-app>
+    
+     <v-navigation-drawer
+        v-model="drawer"
+        app
+        right
+        clipped
+        class = "mt-12"
+      >
+        <v-list
+          dense
+          nav
+          class="py-0"
+        >
+          <v-list-item
+                v-for="n in pages"
+                :key="n"
+                @click="(e) => {navigate(n[0],n[1]);}"
+              >
+              <v-list-item-action>
+                  <v-icon :color="page == n[0] ? 'blue darken-2': ''">{{n[1]}}</v-icon>
+                </v-list-item-action>
+
+                <v-list-item-title>{{ n[0] }}</v-list-item-title>
+              </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
       <div>
           <v-app-bar
             color="primary"
             dark
+            dense
           >
             <v-icon>{{pageIcon}}</v-icon>
             <v-toolbar-title>&nbsp;{{session.name}}</v-toolbar-title>
 
             <v-spacer></v-spacer>
-            <v-chip v-if="connected" color="green" @click="disconnect()">Connected</v-chip>
-            <v-chip v-if="!connected" color="grey" @click="connect()">Connect</v-chip>
+            
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                  <v-chip color="white" v-on="on" @click="toggleConnection()" class="mx-2">
+                  		 <v-icon :color="connected?'green':'red'">{{connected?'mdi-wifi':'mdi-wifi-off'}}</v-icon>
+                  </v-chip>
+              </template>
+              <span>{{connected?'Connected':'Disconnected'}}</span>
+            </v-tooltip>
+            
+
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-avatar v-on="on" >
@@ -56,30 +92,12 @@
               </template>
               <span>{{me.name}}</span>
             </v-tooltip>
-            <v-menu
-            left
-            bottom
-          >
-            <template v-slot:activator="{ on }">
-              <v-btn icon v-on="on">
-                <v-icon>mdi-dots-vertical</v-icon>
+            
+          <v-btn icon @click="drawer=!drawer">
+                <v-icon>mdi-menu</v-icon>
               </v-btn>
-            </template>
-
-            <v-list>
-              <v-list-item
-                v-for="n in pages"
-                :key="n"
-                @click="(e) => {navigate(n[0],n[1]);}"
-              >
-              <v-list-item-action>
-                  <v-icon :color="page == n[0] ? 'blue darken-2': ''">{{n[1]}}</v-icon>
-                </v-list-item-action>
-
-                <v-list-item-title>{{ n[0] }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          
+          
           <v-progress-linear
             absolute
             bottom
@@ -90,10 +108,10 @@
             :value="estimateProgress"
           ></v-progress-linear>
           </v-app-bar>
-        </div>
-
-
-                      <v-content>
+        </div> 
+                     
+	<v-content>
+                      
                         <v-row justify="center">
                                 <v-dialog v-model="dialog" persistent max-width="600px">
                                   <v-card>
@@ -150,12 +168,13 @@
         					      </v-list-item-avatar>
         					    </v-list-item>
         					    </v-list>
+        					     <v-card-actions>
+                      				  <v-btn :disabled="estimateProgress == 100 || estimateProgress == 0" @click="sendReveal()">Reveal</v-btn>
+				                      <v-btn :disabled="estimateCount == 0" @click="sendRestart()">Restart</v-btn>
+        					     </v-card-actions>
         					    </v-card>
                       <br/>
                       <pre>{{lastMessage}}</pre>
-                      <v-btn :disabled="estimateProgress == 100 || estimateProgress == 0" @click="sendReveal()">Reveal</v-btn>
-                      <v-btn :disabled="estimateCount == 0" @click="sendRestart()">Restart</v-btn>
-
                     </div>
                     <div v-if="page =='Settings' && connected" >
 
@@ -258,6 +277,8 @@
                       </v-card>
                     </div>
                     <div v-if="page =='Me' && connected">
+                    <v-card >
+                      <v-card-text>
                       <v-radio-group v-model="myestimate" :mandatory="false">
                         <v-radio
                           v-for="v in session.values"
@@ -266,6 +287,8 @@
                           >
                         </v-radio>
                       </v-radio-group>
+                      </v-card-text>
+                      </v-card>
                     </div>
                     <div v-if="page =='QR' && connected">
                     	<v-card>

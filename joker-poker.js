@@ -5,6 +5,7 @@ var app = new Vue({
   el: '#app',
   vuetify: new Vuetify(),
   data : {
+	drawer : false,
 	disableWatch : 0,
     myestimate : '',
     sessionIdInput : '',
@@ -203,6 +204,13 @@ var app = new Vue({
     			this.estimates[mate].estimate = '?';
     	}
     	this.navigate("Team");
+    },
+    toggleConnection: function (create) {
+        if(this.connected){
+        	this.disconnect();
+        } else {
+        	this.connect();        	
+        }
     },
     connect: function (create) {
       this.connection.status = "connecting";
