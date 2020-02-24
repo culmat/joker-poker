@@ -34,18 +34,20 @@
 
     <div id="app">
     <v-app>
-    
+
      <v-navigation-drawer
         v-model="drawer"
         app
         right
         clipped
         class = "mt-12"
+        :src="me.useGravatar?me.navSrc:''"
       >
         <v-list
           dense
           nav
           class="py-0"
+          color="rgba(255,255,255,0.65)"
         >
           <v-list-item
                 v-for="n in pages"
@@ -70,7 +72,7 @@
             <v-toolbar-title>&nbsp;{{session.name}}</v-toolbar-title>
 
             <v-spacer></v-spacer>
-            
+
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                   <v-chip color="white" v-on="on" @click="toggleConnection()" class="mx-2">
@@ -79,7 +81,7 @@
               </template>
               <span>{{connected?'Connected':'Disconnected'}}</span>
             </v-tooltip>
-            
+
 
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
@@ -92,12 +94,12 @@
               </template>
               <span>{{me.name}}</span>
             </v-tooltip>
-            
+
           <v-btn icon @click="drawer=!drawer">
                 <v-icon>mdi-menu</v-icon>
               </v-btn>
-          
-          
+
+
           <v-progress-linear
             absolute
             bottom
@@ -108,10 +110,10 @@
             :value="estimateProgress"
           ></v-progress-linear>
           </v-app-bar>
-        </div> 
-                     
+        </div>
+
 	<v-content>
-                      
+
                         <v-row justify="center">
                                 <v-dialog v-model="dialog" persistent max-width="600px">
                                   <v-card>
@@ -298,9 +300,9 @@
                     					 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL"></v-img>
 							        </v-col>
 							      </v-row>
-						      </v-container>  
+						      </v-container>
                     	</v-card>
-                    </div>                    
+                    </div>
                     <div v-if="!connected">
                       <v-card class="mx-auto">
                          <v-card-text>

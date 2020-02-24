@@ -25,6 +25,7 @@ var app = new Vue({
       image : "",
       observer : false,
       autoConnectInterval : 5,
+      navSrc : "",
     },
     estimates : {
     },
@@ -156,14 +157,18 @@ var app = new Vue({
 		if(!app.me.useGravatar || app.me.gravatar=='') return;
 		axios.get('https://en.gravatar.com/'+app.me.gravatar+'.json')
 	      .then(function (response) {
-	    	if(!app.me.useGravatar) return;
-	    	app.disableWatch++;
-	    	app.me.image = response.data.entry[0].thumbnailUrl;
-	    	try {
-	    		app.me.name = response.data.entry[0].name.givenName;
-	    	} catch(e) {
-	    		app.me.name = app.me.gravatar;
-	    	}
+  	    	if(!app.me.useGravatar) return;
+  	    	app.disableWatch++;
+  	    	app.me.image = response.data.entry[0].thumbnailUrl;
+  	    	try {
+  	    		app.me.name = response.data.entry[0].name.givenName;
+  	    	} catch(e) {
+  	    		app.me.name = app.me.gravatar;
+  	    	}
+          try {
+  	    		app.me.navSrc = response.data.entry[0].profileBackground.url;
+  	    	} catch(e) {
+  	    	}
 	      })
 	      .catch(function (error) {
 	    	 if(!app.me.useGravatar) return;
@@ -263,6 +268,16 @@ var app = new Vue({
 });
 
 
+function loadRandomuserMe(){
+  axios.get('https://randomuser.me/api/?inc=name&noinfo&nat=us,fr,gb,de,ch')
+    .then(function (response) {
+      app.me.name = response.data.results[0].name.first;
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+}
 
 function loadLocalData(){
   var data = JSON.parse(localStorage.getItem(app.sessionId));
@@ -270,16 +285,17 @@ function loadLocalData(){
   if(data && data.me) {
     app.me = data.me;
   } else {
-    axios.get('https://randomuser.me/api/?inc=name&noinfo&nat=us,fr,gb,de,ch')
+    axios.get('https://namey.muffinlabs.com/name.json?count=1&with_surname=false&frequency=all')
       .then(function (response) {
-        app.me.name = response.data.results[0].name.first;
+        app.me.name = response.data[0];
       })
       .catch(function (error) {
         // handle error
         console.log(error);
-        app.me.name = new Date().getTime()
+        loadRandomuserMe();
       })
      .then(function () {
+       if(app.me.name =="") app.me.name = new Date().getTime()
     	 app.navigate("Settings");
      });
 
