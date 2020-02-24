@@ -126,8 +126,8 @@ var app = new Vue({
     		if(this.me.useGravatar && this.me.useRobohash){
     			this.disableWatch++;
     			this.me.useRobohash = false;
-    		}  
-    		if(this.me.useRobohash){    			
+    		}
+    		if(this.me.useRobohash){
     			const imgUrl = "https://robohash.org/" + this.me.name;
     			if(this.me.image != imgUrl){
     				this.disableWatch++
@@ -154,7 +154,6 @@ var app = new Vue({
   methods: {
 	loadGravatar: function () {
 		if(!app.me.useGravatar || app.me.gravatar=='') return;
-		console.log('https://en.gravatar.com/'+app.me.gravatar+'.json')
 		axios.get('https://en.gravatar.com/'+app.me.gravatar+'.json')
 	      .then(function (response) {
 	    	if(!app.me.useGravatar) return;
@@ -163,7 +162,7 @@ var app = new Vue({
 	    	try {
 	    		app.me.name = response.data.entry[0].name.givenName;
 	    	} catch(e) {
-	    		app.me.name = app.me.gravatar;	    		
+	    		app.me.name = app.me.gravatar;
 	    	}
 	      })
 	      .catch(function (error) {
@@ -209,7 +208,7 @@ var app = new Vue({
         if(this.connected){
         	this.disconnect();
         } else {
-        	this.connect();        	
+        	this.connect();
         }
     },
     connect: function (create) {
