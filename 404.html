@@ -125,24 +125,25 @@
         					       <v-list-item-icon>
 
                             <v-chip v-if="id!=me.id"
-                            :outlined="mate.estimate==''"
+                              :outlined="mate.estimate==''"
+                              :color="getColor(mate.estimate, '')"
                             ><v-avatar left v-if="mate.estimate!='' && !estimateDone">
                               <v-icon>mdi-checkbox-marked-circle</v-icon>
                             </v-avatar>
-                            {{estimateDone ? mate.estimate : ""}}</v-chip>
+                            <b>{{estimateDone ? mate.estimate : ""}}</b></v-chip>
 
                             <v-chip v-if="id==me.id"
-                              @click="navigate('Me')"
-                              color="primary"
                               :outlined="mate.estimate==''"
+                              :color="getColor(mate.estimate,'primary')"
+                              @click="navigate('Me')"
                             ><v-avatar left v-if="mate.estimate!='' && !estimateDone">
                               <v-icon>mdi-checkbox-marked-circle</v-icon>
                             </v-avatar>
-                            {{mate.estimate}}</v-chip>
+                            <b>{{mate.estimate}}</b></v-chip>
 
                 				  </v-list-item-icon>
         					      <v-list-item-content>
-        					        <v-list-item-title>{{mate.name}}</v-list-item-title>
+        					        <v-list-item-title><div v-if="id!=me.id">{{mate.name}}</div><b v-if="id==me.id">{{mate.name}}</b></v-list-item-title>
         					      </v-list-item-content>
         						  <v-list-item-avatar>
         					        <v-img :src="mate.image"></v-img>
@@ -152,8 +153,8 @@
         					    </v-card>
                       <br/>
                       <pre>{{lastMessage}}</pre>
-                      <v-btn :disabled="estimateProgress == 100 || estimateProgress == 0">Reveal</v-btn>
-                      <v-btn :disabled="estimateCount == 0">Restart</v-btn>
+                      <v-btn :disabled="estimateProgress == 100 || estimateProgress == 0" @click="sendReveal()">Reveal</v-btn>
+                      <v-btn :disabled="estimateCount == 0" @click="sendRestart()">Restart</v-btn>
 
                     </div>
                     <div v-if="page =='Settings' && connected" >

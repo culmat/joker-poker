@@ -51,6 +51,22 @@ var app = new Vue({
       }
       return count;
     },
+    estimateMin: function () {
+        var min = 9999;
+        for (var mate in this.estimates) {
+        	const v = this.order[this.estimates[mate].estimate];
+        	if(v) min = Math.min(v, min);
+        }
+        return min;
+    },
+    estimateMax: function () {
+    	var max = -1;
+    	for (var mate in this.estimates) {
+    		const v = this.order[this.estimates[mate].estimate];
+    		if(v) max = Math.max(v, max)
+    	}
+    	return max;
+    },
     connected: function () {
       return this.connection.status == "connected";
     },
@@ -62,20 +78,24 @@ var app = new Vue({
     },
     order: function () {
       const o = {}
-      app.session.values.forEach((v,i) => o[v] = i);
+      app.session.values.forEach((v,i) => o[v] = v=="?"?1.3:(i+1));
       return o;
     }
   },
   watch: {
     myestimate: {
        handler(){
-         if(this.myestimate) {
-           this.navigate('Team');
-           this.setEstimate(this.me.id, this.myestimate);
-           yai.send({estimate : {id : this.me.id,  estimate : this.myestimate }});
-         } else {
-           this.navigate('Me');
-         }
+    	   if(this.disableWatch) {
+      		  this.disableWatch--;
+       	  } else {
+	    	 if(this.myestimate!="") {
+	           this.navigate('Team');
+	           this.setEstimate(this.me.id, this.myestimate);
+	           yai.send({estimate : {id : this.me.id,  estimate : this.myestimate }});
+	         } else {
+	           this.navigate('Me');
+	         }
+       	  }
        }
    },
 	 me: {
@@ -107,13 +127,41 @@ var app = new Vue({
     },
   },
   methods: {
+	getColor: function (estimate, fallback) {
+		 if(!this.estimateDone) return fallback;
+		 if(this.estimateMin == this.estimateMax) return "light-green";
+		 const v = this.order[estimate];
+		 return (v == this.estimateMin || v == this.estimateMax) ? "orange" : "";
+	},
     join: function (create) {
       this.sessionId = yai.setSessionId(create ? yai.uuid() : this.sessionIdInput);
       this.connect();
     },
+    sendRestart: function () {
+    	yai.send({restart : true});
+    },
+    restart: function () {
+		this.myestimate = "";
+		for (var mate in this.estimates) {
+	       this.estimates[mate].estimate = '';
+	    }
+    },
+    sendReveal: function () {
+    	yai.send({reveal : true});
+    },
+    reveal: function () {
+    	if(this.myestimate == "") {
+    		this.disableWatch++;
+    		this.myestimate = "?";
+    	}
+    	for (var mate in this.estimates) {
+    		if(this.estimates[mate].estimate == '')
+    			this.estimates[mate].estimate = '?';
+    	}
+    	this.navigate("Team");
+    },
     connect: function (create) {
       this.connection.status = "connecting";
-      this.connection.auto = true;
       yai.connect();
     },
     autoConnect: function () {
@@ -212,11 +260,12 @@ yai .addListener("clusterChange" , app.syncState)
     })
     .addListener("connect" , function() {
       app.connection.status = "connected";
+      app.connection.auto = true;
       this.send({session : app.session});
       app.sendMate();
     })
     .addListener("message" , function(data) {
-      console.log(data);
+      //console.log(data);
       if(data.session) {
     	  if(data.session.time > app.session.time) {
     		  app.disableWatch++
@@ -232,6 +281,10 @@ yai .addListener("clusterChange" , app.syncState)
 		      app.estimates = data.estimates;
       } else if(data.estimate) {
           app.setEstimate(data.estimate.id, data.estimate.estimate)
+      } else if(data.restart) {
+    	  app.restart();
+      } else if(data.reveal) {
+    	  app.reveal();
       } else {
         app.lastMessage = data;
       }
