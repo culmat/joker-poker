@@ -189,16 +189,31 @@
                       <v-card-text>
                       <v-form>
                       	<v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
+                      	<v-switch v-model="me.useGravatar" class="ma-2" label="Use gravatar"></v-switch>
+                        <v-text-field
+                            v-model="me.gravatar"
+                            label="Gravatar account"
+                            required
+                            v-if="me.useGravatar"
+                          ></v-text-field>
                         <v-text-field
                             v-model="me.name"
                             label="Name"
                             required
+                            :disabled="me.useGravatar"
+                          ></v-text-field>
+                        <v-switch v-if="!me.useGravatar" v-model="me.useRobohash" class="ma-2" label="Use robohash"></v-switch>
+                        <v-text-field
+                            v-model="me.image"
+                            label="Image"
+                            required
+                            :disabled="me.useRobohash||me.useGravatar"
                           ></v-text-field>
                           <v-avatar>
                             <img
                               :src="me.image"
                               :alt="me.name"
-                            >
+                            />
                           </v-avatar>
                           <v-text-field
                               v-model="app.me.id"

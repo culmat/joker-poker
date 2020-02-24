@@ -1,4 +1,5 @@
 var baseHref = document.getElementsByTagName('base')[0].href;
+var gravatarTimer;
 var yai = new YouAndI('joker-poker');
 var app = new Vue({
   el: '#app',
@@ -17,6 +18,9 @@ var app = new Vue({
     me : {
       id: null,
       name : "",
+      useRobohash : true,
+      gravatar : '',
+      useGravatar : false,
       image : "",
       observer : false,
       autoConnectInterval : 5,
@@ -102,17 +106,33 @@ var app = new Vue({
        	  }
        }
    },
-	 me: {
+   'me.useGravatar'(useGravatar){
+	   clearTimeout(gravatarTimer);
+	   if(useGravatar) {
+		   this.loadGravatar();
+       }
+   },
+   'me.gravatar'(newVal){
+	   clearTimeout(gravatarTimer);
+	   gravatarTimer = setTimeout(this.loadGravatar, 500);
+   },
+   me: {
       deep: true,
       handler(){
     	  if(this.disableWatch) {
-   		   	this.disableWatch--
+   		   	this.disableWatch--;
     	  } else {
-          const imgUrl = "https://robohash.org/" + this.me.name;
-          if(this.me.image != imgUrl){
-            this.disableWatch++
-    	    	this.me.image = imgUrl;
-          }
+    		if(this.me.useGravatar && this.me.useRobohash){
+    			this.disableWatch++;
+    			this.me.useRobohash = false;
+    		}  
+    		if(this.me.useRobohash){    			
+    			const imgUrl = "https://robohash.org/" + this.me.name;
+    			if(this.me.image != imgUrl){
+    				this.disableWatch++
+    				this.me.image = imgUrl;
+    			}
+    		}
   	    	this.sendMate();
     	  }
       }
@@ -131,6 +151,26 @@ var app = new Vue({
     },
   },
   methods: {
+	loadGravatar: function () {
+		if(!app.me.useGravatar || app.me.gravatar=='') return;
+		console.log('https://en.gravatar.com/'+app.me.gravatar+'.json')
+		axios.get('https://en.gravatar.com/'+app.me.gravatar+'.json')
+	      .then(function (response) {
+	    	if(!app.me.useGravatar) return;
+	    	app.disableWatch++;
+	    	app.me.image = response.data.entry[0].thumbnailUrl;
+	    	try {
+	    		app.me.name = response.data.entry[0].name.givenName;
+	    	} catch(e) {
+	    		app.me.name = app.me.gravatar;	    		
+	    	}
+	      })
+	      .catch(function (error) {
+	    	 if(!app.me.useGravatar) return;
+	    	  // handle error
+	        console.log(error);
+	      });
+	},
 	getColor: function (estimate, fallback) {
 		 if(!this.estimateDone) return fallback;
 		 if(this.estimateMin == this.estimateMax) return "light-green";
