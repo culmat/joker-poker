@@ -199,7 +199,7 @@ var app = new Vue({
     	yai.send({reveal : true});
     },
     reveal: function () {
-    	if(this.myestimate == "") {
+    	if(this.myestimate == "" && !this.me.observer) {
     		this.disableWatch++;
     		this.myestimate = "?";
     	}
