@@ -252,6 +252,17 @@
                         </v-radio>
                       </v-radio-group>
                     </div>
+                    <div v-if="page =='QR' && connected">
+                    	<v-card>
+                    		 <v-container>
+							      <v-row justify="space-between">
+							        <v-col>
+                    					 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL"></v-img>
+							        </v-col>
+							      </v-row>
+						      </v-container>  
+                    	</v-card>
+                    </div>                    
                     <div v-if="!connected">
                       <v-card class="mx-auto">
                          <v-card-text>

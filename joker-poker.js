@@ -37,6 +37,7 @@ var app = new Vue({
       ['Team' , 'mdi-account-multiple'] ,
       ['Me' , 'mdi-account'],
       ['Settings' , 'mdi-settings'],
+      ['QR' , 'mdi-qrcode'],
     ],
     page : "Team",
     pageIcon : 'mdi-account-multiple',
@@ -75,6 +76,9 @@ var app = new Vue({
     },
     estimateDone: function () {
       return 100 == this.estimateProgress;
+    },
+    sessionURL: function () {
+    	return baseHref+this.sessionId +"/";
     },
     order: function () {
       const o = {}
@@ -188,7 +192,7 @@ var app = new Vue({
       if(page == this.page) return;
       this.page = page || this.page;
       this.pageIcon = icon || this.pageIcon;
-      window.history.pushState({page : this.page, sessionId: this.sessionId  }, null, baseHref+this.sessionId +"/"+ this.page);
+      window.history.pushState({page : this.page, sessionId: this.sessionId  }, null, this.sessionURL+ this.page);
     },
     syncState: function (create) {
       this.clusterState = yai.clusterState;
