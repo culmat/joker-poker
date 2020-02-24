@@ -19,10 +19,16 @@ var app = new Vue({
       name : "",
       image : "",
       observer : false,
+      autoConnectInterval : 5,
     },
     estimates : {
     },
-    connected : false,
+    connection : {
+      status : "disconnected",
+      auto : false,
+      autoText : '',
+      autoCountDown : -1,
+    },
     lastMessage : '',
     clusterState : {"leader" : "?", "nodes" : []},
     isLeader : false,
@@ -45,8 +51,19 @@ var app = new Vue({
       }
       return count;
     },
+    connected: function () {
+      return this.connection.status == "connected";
+    },
     estimateProgress: function () {
       return 100 * this.estimateCount / Object.keys(this.estimates).length;
+    },
+    estimateDone: function () {
+      return 100 == this.estimateProgress;
+    },
+    order: function () {
+      const o = {}
+      app.session.values.forEach((v,i) => o[v] = i);
+      return o;
     }
   },
   watch: {
@@ -92,7 +109,32 @@ var app = new Vue({
   methods: {
     join: function (create) {
       this.sessionId = yai.setSessionId(create ? yai.uuid() : this.sessionIdInput);
+      this.connect();
+    },
+    connect: function (create) {
+      this.connection.status = "connecting";
+      this.connection.auto = true;
       yai.connect();
+    },
+    autoConnect: function () {
+      const con = this.connection;
+      if(!con.auto){
+        con.autoText = '';
+        return;
+      }
+      con.autoCountDown = con.autoCountDown < 0 ? this.me.autoConnectInterval : con.autoCountDown -1;
+      if(con.autoCountDown == 0) {
+        con.autoText = "";
+        con.autoCountDown--;
+        this.connect();
+      } else {
+        con.autoText = "Automatic reconnect in "+con.autoCountDown+" seconds.";
+        window.setTimeout(this.autoConnect, 1000);
+      }
+    },
+    disconnect: function (create) {
+      this.connection.auto = false;
+      yai.disconnect();
     },
     navigate: function (page,icon) {
       if(page == this.page) return;
@@ -155,29 +197,12 @@ window.onunload  = function(){
   }));
 };
 
-(function(){
-  var path = document.URL.replace(baseHref, "");
-  if (path) {
-    var tokens =  path.split("/");
-    app.sessionId = tokens[0];
-    app.page = tokens[1] || "Team";
-    app.pageIcon = app.pages.find(e => e[0] == app.page)[1]
-  }
-  if(!app.sessionId){
-    app.dialog = true;
-  }  else {
-    loadLocalData();
-    app.navigate();
-  }
-})();
-
-
 yai.getSessionId = function() {return app.sessionId;};
 yai.setSessionId = function (id) {
     app.sessionId = id;
     loadLocalData();
     app.navigate();
-	return id;
+	  return id;
 };
 
 yai .addListener("clusterChange" , app.syncState)
@@ -186,7 +211,7 @@ yai .addListener("clusterChange" , app.syncState)
       this.send({estimates : app.estimates});
     })
     .addListener("connect" , function() {
-      app.connected = true;
+      app.connection.status = "connected";
       this.send({session : app.session});
       app.sendMate();
     })
@@ -212,10 +237,26 @@ yai .addListener("clusterChange" , app.syncState)
       }
     })
     .addListener("disconnect" , function() {
-      // TODO reconnect with screen
-      app.connected = false;
+      app.connection.status = "disconnected";
+      app.autoConnect();
     })
     .addListener("bye" , function(yaiID) {
       app.removeMate(yaiID);
-    })
-    .connect();
+    });
+
+(function(){
+  var path = document.URL.replace(baseHref, "");
+  if (path) {
+    var tokens =  path.split("/");
+    app.sessionId = tokens[0];
+    app.page = tokens[1] || "Team";
+    app.pageIcon = app.pages.find(e => e[0] == app.page)[1]
+  }
+  if(!app.sessionId){
+    app.dialog = true;
+  }  else {
+    loadLocalData();
+    app.connect();
+    app.navigate();
+  }
+})();

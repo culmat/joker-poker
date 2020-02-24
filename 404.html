@@ -44,7 +44,8 @@
             <v-toolbar-title>&nbsp;{{session.name}}</v-toolbar-title>
 
             <v-spacer></v-spacer>
-            <v-chip :color="connected ? 'green' : 'grey'">Connected</v-chip>
+            <v-chip v-if="connected" color="green" @click="disconnect()">Connected</v-chip>
+            <v-chip v-if="!connected" color="grey" @click="connect()">Connect</v-chip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-avatar v-on="on">
@@ -118,19 +119,28 @@
                                 </v-dialog>
                               </v-row>
 
-                    <div v-if="page =='Team'">
+                    <div v-if="page =='Team' && connected">
         					  <v-card>
         					  <v-list>
         					    <v-list-item v-for="(mate, id) in estimates">
         					       <v-list-item-icon>
+
                             <v-chip v-if="id!=me.id"
                             :outlined="mate.estimate==''"
-                            >{{mate.estimate}}</v-chip>
+                            ><v-avatar left v-if="mate.estimate!='' && !estimateDone">
+                              <v-icon>mdi-checkbox-marked-circle</v-icon>
+                            </v-avatar>
+                            {{estimateDone ? mate.estimate : ""}}</v-chip>
+
                             <v-chip v-if="id==me.id"
                               @click="navigate('Me')"
                               color="primary"
                               :outlined="mate.estimate==''"
-                            >{{mate.estimate}}</v-chip>
+                            ><v-avatar left v-if="mate.estimate!='' && !estimateDone">
+                              <v-icon>mdi-checkbox-marked-circle</v-icon>
+                            </v-avatar>
+                            {{mate.estimate}}</v-chip>
+
                 				  </v-list-item-icon>
         					      <v-list-item-content>
         					        <v-list-item-title>{{mate.name}}</v-list-item-title>
@@ -143,8 +153,11 @@
         					    </v-card>
                       <br/>
                       <pre>{{lastMessage}}</pre>
+                      <v-btn :disabled="estimateProgress == 100">Reveal</v-btn>
+                      <v-btn :disabled="estimateCount == 0">Restart</v-btn>
+
                     </div>
-                    <div v-if="page =='Settings'" >
+                    <div v-if="page =='Settings' && connected" >
 
                       <v-card >
                       <v-card-title>Team</v-card-title>
@@ -155,16 +168,12 @@
                             label="Name"
                             required
                           ></v-text-field>
-
                           <v-combobox
                             v-model="session.values"
-
                             label="Values"
                             multiple
                             chips
                           ></v-combobox>
-
-
                         <v-text-field
                             v-model="sessionId"
                             label="ID"
@@ -233,7 +242,7 @@
                       </v-card-text>
                       </v-card>
                     </div>
-                    <div v-if="page =='Me'">
+                    <div v-if="page =='Me' && connected">
                       <v-radio-group v-model="myestimate" :mandatory="false">
                         <v-radio
                           v-for="v in session.values"
@@ -242,6 +251,23 @@
                           >
                         </v-radio>
                       </v-radio-group>
+                    </div>
+                    <div v-if="!connected">
+                      <v-card class="mx-auto">
+                         <v-card-text>
+                         {{connection.autoText}}
+                         <v-progress-circular
+                            indeterminate
+                            color="primary"
+                            v-if="connection.status=='connecting'"
+                          ></v-progress-circular>
+                          </v-card-text>
+                         <v-card-actions>
+                           <v-btn
+                           :disabled="connection.status!='disconnected'"
+                           @click="connect()">Connect</v-chip>
+                         </v-card-actions>
+                        </v-card>
                     </div>
                     </v-content>
     </v-app>
