@@ -152,7 +152,7 @@
         					    </v-card>
                       <br/>
                       <pre>{{lastMessage}}</pre>
-                      <v-btn :disabled="estimateProgress == 100">Reveal</v-btn>
+                      <v-btn :disabled="estimateProgress == 100 || estimateProgress == 0">Reveal</v-btn>
                       <v-btn :disabled="estimateCount == 0">Restart</v-btn>
 
                     </div>
