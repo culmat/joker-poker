@@ -34,12 +34,12 @@ var app = new Vue({
     isLeader : false,
     yaiID : yai.createdAt,
     pages : [
-      ['Team' , 'fas fa-user-friends'] ,
-      ['Me' , 'fas fa-user'],
-      ['Settings' , 'fas fa-cog'],
+      ['Team' , 'mdi-account-multiple'] ,
+      ['Me' , 'mdi-account'],
+      ['Settings' , 'mdi-settings'],
     ],
     page : "Team",
-    pageIcon : 'fas fa-user-friends',
+    pageIcon : 'mdi-account-multiple',
   },
   computed: {
     estimateCount: function () {
