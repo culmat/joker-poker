@@ -47,8 +47,8 @@
             <v-chip v-if="!connected" color="grey" @click="connect()">Connect</v-chip>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-avatar v-on="on">
-                  <img
+                <v-avatar v-on="on" >
+                  <img @click="navigate('Settings')"
                     :src="me.image"
                     :alt="me.name"
                   >
