@@ -1,5 +1,6 @@
 var baseHref = document.getElementsByTagName('base')[0].href;
 var gravatarTimer;
+var gravatarLoading;
 var yai = new YouAndI('joker-poker');
 var app = new Vue({
   el: '#app',
@@ -96,7 +97,7 @@ var app = new Vue({
     myestimate: {
        handler(){
     	   if(this.disableWatch) {
-      		  this.disableWatch--;
+      		  this.watchDec();
        	  } else {
 	    	 if(this.myestimate!="") {
 	           this.navigate('Team');
@@ -122,16 +123,16 @@ var app = new Vue({
       deep: true,
       handler(){
     	  if(this.disableWatch) {
-   		   	this.disableWatch--;
+   		   	this.watchDec();
     	  } else {
     		if(this.me.useGravatar && this.me.useRobohash){
-    			this.disableWatch++;
+    			this.watchInc();
     			this.me.useRobohash = false;
     		}
     		if(this.me.useRobohash){
     			const imgUrl = "https://robohash.org/" + this.me.name;
     			if(this.me.image != imgUrl){
-    				this.disableWatch++
+    				this.watchInc()
     				this.me.image = imgUrl;
     			}
     		}
@@ -143,9 +144,9 @@ var app = new Vue({
     	deep: true,
     	handler(){
     	   if(this.disableWatch) {
-    		   this.disableWatch--
+    		   this.watchDec()
     	   } else {
-           this.disableWatch++
+           this.watchInc()
     		   this.session.time = new Date().getTime();
     		   yai.send({session : this.session});
     	   }
@@ -153,12 +154,21 @@ var app = new Vue({
     },
   },
   methods: {
+	watchInc: function () {
+		this.disableWatch++;
+	},
+	watchDec: function () {
+		this.disableWatch = Math.max(this.disableWatch-1,0);
+	},
 	loadGravatar: function () {
 		if(!app.me.useGravatar || app.me.gravatar=='') return;
+		clearTimeout(gravatarTimer);
+		if(gravatarLoading) return;
+		gravatarLoading = true;
 		axios.get('https://en.gravatar.com/'+app.me.gravatar+'.json')
 	      .then(function (response) {
   	    	if(!app.me.useGravatar) return;
-  	    	app.disableWatch++;
+  	    	app.watchInc();
   	    	app.me.image = response.data.entry[0].thumbnailUrl;
   	    	try {
   	    		app.me.name = response.data.entry[0].name.givenName;
@@ -174,7 +184,13 @@ var app = new Vue({
 	    	 if(!app.me.useGravatar) return;
 	    	  // handle error
 	        console.log(error);
-	      });
+	      })
+	      .then(function () {
+	    	  app.watchDec();
+	    	  gravatarLoading = false;
+	    	  app.sendMate();
+	    });
+		
 	},
 	getColor: function (estimate, fallback) {
 		 if(!this.estimateDone) return fallback;
@@ -200,7 +216,7 @@ var app = new Vue({
     },
     reveal: function () {
     	if(this.myestimate == "" && !this.me.observer) {
-    		this.disableWatch++;
+    		this.watchInc();
     		this.myestimate = "?";
     	}
     	for (var mate in this.estimates) {
@@ -335,7 +351,7 @@ yai .addListener("clusterChange" , app.syncState)
       //console.log(data);
       if(data.session) {
     	  if(data.session.time > app.session.time) {
-    		  app.disableWatch++
+    		  app.watchInc()
     		  app.session = data.session;
     	  }
       } else if(data.mate) {
