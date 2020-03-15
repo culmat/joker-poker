@@ -182,33 +182,7 @@
                       <pre>{{lastMessage}}</pre>
                     </div>
                     <div v-if="page =='Settings' && connected" >
-
-                      <v-card >
-                      <v-card-title>Team</v-card-title>
-                      <v-card-text>
-                      <v-form>
-                        <v-text-field
-                            v-model="session.name"
-                            label="Name"
-                            required
-                          ></v-text-field>
-                          <v-combobox
-                            v-model="session.values"
-                            label="Values"
-                            multiple
-                            chips
-                          ></v-combobox>
-                        <v-text-field
-                            v-model="sessionId"
-                            label="ID"
-                            required
-                            disabled
-                          ></v-text-field>
-                      <v-form>
-                      </v-card-text>
-                      </v-card>
-
-                      <v-card >
+                      <v-card outlined raised>
                       <v-card-title>Me</v-card-title>
                       <v-card-text>
                       <v-form>
@@ -248,9 +222,33 @@
                       <v-form>
                       </v-card-text>
                       </v-card>
-
-                      <v-card >
-
+					<v-divider></v-divider>
+ 					<v-card outlined raised>
+                      <v-card-title>Team</v-card-title>
+                      <v-card-text>
+                      <v-form>
+                        <v-text-field
+                            v-model="session.name"
+                            label="Name"
+                            required
+                          ></v-text-field>
+                          <v-combobox
+                            v-model="session.values"
+                            label="Values"
+                            multiple
+                            chips
+                          ></v-combobox>
+                        <v-text-field
+                            v-model="sessionId"
+                            label="ID"
+                            required
+                            disabled
+                          ></v-text-field>
+                      <v-form>
+                      </v-card-text>
+                      </v-card>
+					  <v-divider></v-divider>	
+                      <v-card outlined raised>
                       <v-card-title>Cluster state</v-card-title>
                       <v-card-text>
                       <v-form>
