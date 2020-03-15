@@ -182,12 +182,20 @@
                       <pre>{{lastMessage}}</pre>
                     </div>
                     <div v-if="page =='Settings' && connected" >
+                      <v-toolbar collapse floating min-width="150px">
+                      <v-switch  v-model="settings.details" label="Details"></v-switch>
+                      </v-toolbar>
+                       <v-container dense>
+					      <v-row>
+					        <v-col cols="12">
+        
                       <v-card outlined raised>
                       <v-card-title>Me</v-card-title>
                       <v-card-text>
                       <v-form>
                       	<v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
                       	<v-switch v-model="me.useGravatar" class="ma-2" label="Use gravatar"></v-switch>
+                        <v-switch v-if="!me.useGravatar" v-model="me.useRobohash" class="ma-2" label="Use robohash"></v-switch>
                         <v-text-field
                             v-model="me.gravatar"
                             label="Gravatar account"
@@ -200,21 +208,15 @@
                             required
                             :disabled="me.useGravatar"
                           ></v-text-field>
-                        <v-switch v-if="!me.useGravatar" v-model="me.useRobohash" class="ma-2" label="Use robohash"></v-switch>
                         <v-text-field
                             v-model="me.image"
                             label="Image"
                             required
                             :disabled="me.useRobohash||me.useGravatar"
                           ></v-text-field>
-                          <v-avatar>
-                            <img
-                              :src="me.image"
-                              :alt="me.name"
-                            />
-                          </v-avatar>
                           <v-text-field
-                              v-model="app.me.id"
+                              v-if="settings.details"
+                              v-model="me.id"
                               label="ID"
                               required
                               disabled
@@ -222,7 +224,8 @@
                       <v-form>
                       </v-card-text>
                       </v-card>
-					<v-divider></v-divider>
+                      </v-col>
+                      <v-col cols="12">
  					<v-card outlined raised>
                       <v-card-title>Team</v-card-title>
                       <v-card-text>
@@ -239,6 +242,7 @@
                             chips
                           ></v-combobox>
                         <v-text-field
+                            v-if="settings.details"
                             v-model="sessionId"
                             label="ID"
                             required
@@ -247,8 +251,9 @@
                       <v-form>
                       </v-card-text>
                       </v-card>
-					  <v-divider></v-divider>	
-                      <v-card outlined raised>
+                      </v-col>
+                      <v-col cols="12">
+                      <v-card outlined raised v-if="settings.details">
                       <v-card-title>Cluster state</v-card-title>
                       <v-card-text>
                       <v-form>
@@ -275,9 +280,12 @@
                               disabled
                             ></v-select>
 
-                      <v-form>
+                      </v-form>
                       </v-card-text>
                       </v-card>
+                      </v-col>
+                      </v-row>
+                      </v-container>
                     </div>
                     <div v-if="page =='Me' && connected">
                     <v-card >
@@ -295,14 +303,9 @@
                     </div>
                     <div v-if="page =='QR' && connected">
                     	<v-card>
-                    		 <v-container>
-							      <v-row justify="space-between">
-							        <v-col>
-                    					 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL"></v-img>
-							        </v-col>
-							      </v-row>
-						      </v-container>
-                    	</v-card>
+-                     		 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL" height="600" contain></v-img>
+-                     	</v-card>
+                    		
                     </div>
                     <div v-if="!connected">
                       <v-card class="mx-auto">

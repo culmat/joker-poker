@@ -12,6 +12,7 @@ var app = new Vue({
     sessionIdInput : '',
     dialog : false,
     sessionId : null,
+    settings : {detailed : false},
     session : {
       name : 'Joker Poker',
       time : 0,
@@ -261,7 +262,7 @@ var app = new Vue({
     navigate: function (page,icon) {
       if(page == this.page) return;
       this.page = page || this.page;
-      this.pageIcon = icon || this.pageIcon;
+      this.pageIcon = icon || this.pages.find(e => e[0] == this.page)[1]
       window.history.pushState({page : this.page, sessionId: this.sessionId  }, null, this.sessionURL+ this.page);
     },
     syncState: function (create) {
@@ -300,10 +301,13 @@ function loadRandomuserMe(){
 
 function loadLocalData(){
   var data = JSON.parse(localStorage.getItem(app.sessionId));
-	if(data && data.session) {
+  if(data && data.settings) {
+	  app.settings = data.settings;
+  }
+  if(data && data.session) {
 		app.watchInc()
 		app.session = data.session;
-	}
+  }
   if(data && data.me) {
 	app.watchInc()
 	app.me = data.me;
@@ -331,7 +335,8 @@ window.onunload  = function(){
   if(!app.sessionId) return;
 	localStorage.setItem(app.sessionId, JSON.stringify({
     session : app.session,
-    me : app.me
+    me : app.me,
+    settings : app.settings
   }));
 };
 
@@ -392,8 +397,7 @@ yai .addListener("clusterChange" , app.syncState)
   if (path) {
     var tokens =  path.split("/");
     app.sessionId = tokens[0];
-    app.page = tokens[1] || "Team";
-    app.pageIcon = app.pages.find(e => e[0] == app.page)[1]
+    app.navigate(tokens[1] || "Team");
   }
   if(!app.sessionId){
     app.dialog = true;
