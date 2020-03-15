@@ -89,7 +89,7 @@ var app = new Vue({
     },
     order: function () {
       const o = {}
-      app.session.values.forEach((v,i) => o[v] = v=="?"?1.3:(i+1));
+      app.session.values.forEach((v,i) => o[v] = app.isJoker(v)?1.3:(i+1));
       return o;
     }
   },
@@ -154,6 +154,9 @@ var app = new Vue({
     },
   },
   methods: {
+	isJoker(c){
+		return c == "?" || c == "🃏";
+	},  
 	watchInc: function () {
 		this.disableWatch++;
 	},
@@ -192,7 +195,7 @@ var app = new Vue({
 		
 	},
 	getColor: function (estimate, fallback) {
-		 if(!this.estimateDone) return fallback;
+		 if(!this.estimateDone || this.isJoker(estimate)) return fallback;
 		 if(this.estimateMin == this.estimateMax) return "light-green";
 		 const v = this.order[estimate];
 		 return (v == this.estimateMin || v == this.estimateMax) ? "orange" : "";
