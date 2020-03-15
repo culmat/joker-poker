@@ -182,8 +182,10 @@
                       <pre>{{lastMessage}}</pre>
                     </div>
                     <div v-if="page =='Settings' && connected" >
-                      <v-toolbar collapse floating min-width="150px">
+                      <v-toolbar :collapse="!settings.details" min-width="150px">
                       <v-switch  v-model="settings.details" label="Details"></v-switch>
+					  <v-spacer></v-spacer>
+                      <v-btn v-if="settings.details" color="red" @click="deleteLocal()">Delete local data</v-btn>
                       </v-toolbar>
                        <v-container dense>
 					      <v-row>

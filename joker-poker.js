@@ -16,7 +16,7 @@ var app = new Vue({
     session : {
       name : 'Joker Poker',
       time : 0,
-      values : ["☕","1","2","3","5","13","20","40","🃏"]
+      values : ["☕","1","2","3","5","13","20","40","?"]
     },
     me : {
       id: null,
@@ -234,6 +234,11 @@ var app = new Vue({
         } else {
         	this.connect();
         }
+    },
+    deleteLocal: function () {
+    	localStorage.removeItem(this.sessionId);
+    	window.onunload = null;
+    	location.reload();
     },
     connect: function (create) {
       this.connection.status = "connecting";
