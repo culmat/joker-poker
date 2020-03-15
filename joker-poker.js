@@ -15,7 +15,7 @@ var app = new Vue({
     session : {
       name : 'Joker Poker',
       time : 0,
-      values : ["☕","1","2","3","5","13","20","40","?"]
+      values : ["☕","1","2","3","5","13","20","40","🃏"]
     },
     me : {
       id: null,
@@ -146,7 +146,7 @@ var app = new Vue({
     	   if(this.disableWatch) {
     		   this.watchDec()
     	   } else {
-           this.watchInc()
+    		   this.watchInc()
     		   this.session.time = new Date().getTime();
     		   yai.send({session : this.session});
     	   }
@@ -168,26 +168,25 @@ var app = new Vue({
 		axios.get('https://en.gravatar.com/'+app.me.gravatar+'.json')
 	      .then(function (response) {
   	    	if(!app.me.useGravatar) return;
-  	    	app.watchInc();
+  	    	app.disableWatch = 10;
   	    	app.me.image = response.data.entry[0].thumbnailUrl;
   	    	try {
   	    		app.me.name = response.data.entry[0].name.givenName;
   	    	} catch(e) {
   	    		app.me.name = app.me.gravatar;
   	    	}
-          try {
+             try {
   	    		app.me.navSrc = response.data.entry[0].profileBackground.url;
   	    	} catch(e) {
   	    	}
 	      })
 	      .catch(function (error) {
 	    	 if(!app.me.useGravatar) return;
-	    	  // handle error
-	        console.log(error);
+	         console.log(error);
 	      })
 	      .then(function () {
-	    	  app.watchDec();
 	    	  gravatarLoading = false;
+	    	  app.disableWatch = 0;
 	    	  app.sendMate();
 	    });
 		
@@ -287,7 +286,8 @@ var app = new Vue({
 function loadRandomuserMe(){
   axios.get('https://randomuser.me/api/?inc=name&noinfo&nat=us,fr,gb,de,ch')
     .then(function (response) {
-      app.me.name = response.data.results[0].name.first;
+    	app.watchInc()
+    	app.me.name = response.data.results[0].name.first;
     })
     .catch(function (error) {
       // handle error
@@ -297,9 +297,13 @@ function loadRandomuserMe(){
 
 function loadLocalData(){
   var data = JSON.parse(localStorage.getItem(app.sessionId));
-	if(data && data.session) app.session = data.session;
+	if(data && data.session) {
+		app.watchInc()
+		app.session = data.session;
+	}
   if(data && data.me) {
-    app.me = data.me;
+	app.watchInc()
+	app.me = data.me;
   } else {
     axios.get('https://namey.muffinlabs.com/name.json?count=1&with_surname=false&frequency=all')
       .then(function (response) {
@@ -333,7 +337,7 @@ yai.setSessionId = function (id) {
     app.sessionId = id;
     loadLocalData();
     app.navigate();
-	  return id;
+	return id;
 };
 
 yai .addListener("clusterChange" , app.syncState)
