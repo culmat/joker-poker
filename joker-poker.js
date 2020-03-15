@@ -404,11 +404,11 @@ yai .addListener("clusterChange" , app.syncState)
     app.sessionId = tokens[0];
     app.navigate(tokens[1] || "Team");
   }
-  if(!app.sessionId){
-    app.dialog = true;
+  if(app.sessionId){
+	  loadLocalData();
+	  app.connect();
+	  app.navigate();
   }  else {
-    loadLocalData();
-    app.connect();
-    app.navigate();
+	  app.dialog = true;
   }
 })();
