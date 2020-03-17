@@ -60,8 +60,13 @@
               <v-list-item-action>
                   <v-icon :color="page == n[0] ? 'blue darken-2': ''">{{n[1]}}</v-icon>
                 </v-list-item-action>
-
                 <v-list-item-title>{{ n[0] }}</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="window.open('https://github.com/culmat/joker-poker/wiki/');">
+              <v-list-item-action >
+                  <v-icon>mdi-help</v-icon>
+                </v-list-item-action>
+                <v-list-item-title>About</v-list-item-title>
               </v-list-item>
         </v-list>
       </v-navigation-drawer>
