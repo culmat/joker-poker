@@ -121,21 +121,56 @@
                                 <v-dialog v-model="dialog" persistent max-width="600px">
                                   <v-card>
                                     <v-card-title>
-                                      <span class="headline">Join or create session</span>
+                                      <span class="headline" v-if="sessionId">Welcome to {{session.name}}</span>
+                                      <span class="headline" v-if="!sessionId">Create Team</span>
                                     </v-card-title>
                                     <v-card-text>
                                       <v-container>
                                         <v-row>
                                           <v-col cols="12">
-                                            <v-text-field v-model="sessionIdInput" label="Session ID" required></v-text-field>
+                                            <h1 v-if="!sessionId">Team</h1>
+                                            <v-text-field v-model="session.name" label="Name" required v-if="!sessionId"></v-text-field>
+                                            <h1 v-if="!sessionId">Me</h1>
+                                            <!-- TODO re-factor this form is a copy of the settings page -->
+                                            <v-form>
+						                      	<v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
+						                      	<v-switch v-model="me.useGravatar" class="ma-2" label="Use gravatar"></v-switch>
+						                        <v-switch v-if="!me.useGravatar" v-model="me.useRobohash" class="ma-2" label="Use robohash"></v-switch>
+						                        <v-text-field
+						                            v-model="me.gravatar"
+						                            label="Gravatar account"
+						                            required
+						                            v-if="me.useGravatar"
+						                          ></v-text-field>
+						                        <v-text-field
+						                            v-model="me.name"
+						                            label="Name"
+						                            required
+						                            :disabled="me.useGravatar"
+						                          ></v-text-field>
+						                        <v-text-field
+						                            v-model="me.image"
+						                            label="Image"
+						                            required
+						                            :disabled="me.useRobohash||me.useGravatar"
+						                          ></v-text-field>
+						                          <v-text-field
+						                              v-if="settings.details"
+						                              v-model="me.id"
+						                              label="ID"
+						                              required
+						                              disabled
+						                            ></v-text-field>
+						                      <v-form>
+                      
                                           </v-col>
                                         </v-row>
                                       </v-container>
                                     </v-card-text>
                                     <v-card-actions>
                                       <v-spacer></v-spacer>
-                                      <v-btn color="blue darken-1" text @click="dialog = false;join(false)" :disabled="sessionIdInput == ''">Join</v-btn>
-                                      <v-btn color="blue darken-1" text @click="dialog = false;join(true)">Create</v-btn>
+                                      <v-btn color="blue darken-1" text @click="dialog = false;navigate('Team');" v-if="sessionId">Join</v-btn>
+                                      <v-btn color="blue darken-1" text @click="dialog = false;join(true);" v-if="!sessionId">Create</v-btn>
                                     </v-card-actions>
                                   </v-card>
                                 </v-dialog>

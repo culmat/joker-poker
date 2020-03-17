@@ -316,7 +316,7 @@ function loadLocalData(){
   if(data && data.me) {
 	app.watchInc()
 	app.me = data.me;
-  } else {
+  } else if(app.me.name == ""){
     axios.get('https://namey.muffinlabs.com/name.json?count=1&with_surname=false&frequency=all')
       .then(function (response) {
         app.me.name = response.data[0];
@@ -328,12 +328,12 @@ function loadLocalData(){
       })
      .then(function () {
        if(app.me.name =="") app.me.name = new Date().getTime()
-    	 app.navigate("Settings");
      });
 
   }
   app.me.id = app.me.id || "m"+yai.uuid("");
   if(!app.me.observer) Vue.set(app.estimates, app.me.id, app.me);
+  return data && data.me;
 }
 
 window.onunload  = function(){
@@ -405,10 +405,12 @@ yai .addListener("clusterChange" , app.syncState)
     app.navigate(tokens[1] || "Team");
   }
   if(app.sessionId){
-	  loadLocalData();
+	  app.dialog = !loadLocalData();
 	  app.connect();
+	  // go to default page
 	  app.navigate();
   }  else {
 	  app.dialog = true;
+	  loadLocalData();
   }
 })();
