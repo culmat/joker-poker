@@ -119,18 +119,36 @@
 
                         <v-row justify="center">
                                 <v-dialog v-model="dialog" persistent max-width="600px">
-                                  <v-card>
+                                
+                                   <v-container dense>
+							      <v-row>
+							        <v-col cols="12" v-if="!sessionId">
+                                <v-card>
                                     <v-card-title>
-                                      <span class="headline" v-if="sessionId">Welcome to {{session.name}}</span>
-                                      <span class="headline" v-if="!sessionId">Create Team</span>
+                                      <span class="headline" v-if="!sessionId">Team</span>
                                     </v-card-title>
                                     <v-card-text>
                                       <v-container>
                                         <v-row>
                                           <v-col cols="12">
-                                            <h1 v-if="!sessionId">Team</h1>
                                             <v-text-field v-model="session.name" label="Name" required v-if="!sessionId"></v-text-field>
-                                            <h1 v-if="!sessionId">Me</h1>
+                                            </v-col>
+                                        </v-row>
+                                      </v-container>
+                                    </v-card-text>
+                                  </v-card>
+                                </v-col>
+                                <v-col cols="12">  
+                                
+                                  <v-card>
+                                    <v-card-title>
+                                      <span class="headline" v-if="sessionId">Welcome to {{session.name}}</span>
+                                      <span class="headline" v-if="!sessionId">Me</span>
+                                    </v-card-title>
+                                    <v-card-text>
+                                      <v-container>
+                                        <v-row>
+                                          <v-col cols="12">
                                             <!-- TODO re-factor this form is a copy of the settings page -->
                                             <v-form>
 						                      	<v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
@@ -167,12 +185,22 @@
                                         </v-row>
                                       </v-container>
                                     </v-card-text>
-                                    <v-card-actions>
+                                    <v-card-actions v-if="sessionId">
                                       <v-spacer></v-spacer>
-                                      <v-btn color="blue darken-1" text @click="dialog = false;navigate('Team');" v-if="sessionId">Join</v-btn>
-                                      <v-btn color="blue darken-1" text @click="dialog = false;join(true);" v-if="!sessionId">Create</v-btn>
+                                      <v-btn color="primary" @click="dialog = false;navigate('Team');">Join</v-btn>
                                     </v-card-actions>
                                   </v-card>
+                                  </v-col>
+                                  <v-col cols="12" v-if="!sessionId">
+                                  <v-card>
+                                  <v-card-actions>
+                                      <v-spacer></v-spacer>
+                                      <v-btn color="primary" @click="dialog = false;join(true);" v-if="!sessionId">Create</v-btn>
+                                    </v-card-actions>
+                                    </v-card>
+                                    </v-col>
+                                  </v-row>
+                                  </v-container>
                                 </v-dialog>
                               </v-row>
 
@@ -340,8 +368,8 @@
                     </div>
                     <div v-if="page =='QR' && connected">
                     	<v-card>
--                     		 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL" height="600" contain></v-img>
--                     	</v-card>
+                     		 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL" height="600" contain></v-img>
+                     	</v-card>
                     		
                     </div>
                     <div v-if="!connected">
