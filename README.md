@@ -1,2 +1,0 @@
-# joker-poker
-poker estimation
