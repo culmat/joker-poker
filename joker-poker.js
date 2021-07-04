@@ -21,7 +21,7 @@ var app = new Vue({
     me : {
       id: null,
       name : "",
-      useRobohash : true,
+      useMonsterID : true,
       gravatar : '',
       useGravatar : false,
       image : "",
@@ -126,12 +126,13 @@ var app = new Vue({
     	  if(this.disableWatch) {
    		   	this.watchDec();
     	  } else {
-    		if(this.me.useGravatar && this.me.useRobohash){
+    		if(this.me.useGravatar && this.me.useMonsterID){
     			this.watchInc();
-    			this.me.useRobohash = false;
+    			this.me.useMonsterID = false;
     		}
-    		if(this.me.useRobohash){
-    			const imgUrl = "https://robohash.org/" + this.me.name;
+    		if(this.me.useMonsterID){
+				// alternative service URL: https://sebsauvage.net/monsterid/?seed=
+    			const imgUrl = "https://www.splitbrain.org/_static/monsterid/monsterid.php?seed=" + this.me.name;
     			if(this.me.image != imgUrl){
     				this.watchInc()
     				this.me.image = imgUrl;

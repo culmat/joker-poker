@@ -162,7 +162,7 @@
                                             <v-form>
 						                      	<v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
 						                      	<v-switch v-model="me.useGravatar" class="ma-2" label="Use gravatar"></v-switch>
-						                        <v-switch v-if="!me.useGravatar" v-model="me.useRobohash" class="ma-2" label="Use robohash"></v-switch>
+						                        <v-switch v-if="!me.useGravatar" v-model="me.useMonsterID" class="ma-2" label="Use monsterID"></v-switch>
 						                        <v-text-field
 						                            v-model="me.gravatar"
 						                            label="Gravatar account"
@@ -179,7 +179,7 @@
 						                            v-model="me.image"
 						                            label="Image"
 						                            required
-						                            :disabled="me.useRobohash||me.useGravatar"
+						                            :disabled="me.useMonsterID||me.useGravatar"
 						                          ></v-text-field>
 						                          <v-text-field
 						                              v-if="settings.details"
@@ -269,7 +269,7 @@
                       <v-form>
                       	<v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
                       	<v-switch v-model="me.useGravatar" class="ma-2" label="Use gravatar"></v-switch>
-                        <v-switch v-if="!me.useGravatar" v-model="me.useRobohash" class="ma-2" label="Use robohash"></v-switch>
+                        <v-switch v-if="!me.useGravatar" v-model="me.useMonsterID" class="ma-2" label="Use monsterID"></v-switch>
                         <v-text-field
                             v-model="me.gravatar"
                             label="Gravatar account"
@@ -286,7 +286,7 @@
                             v-model="me.image"
                             label="Image"
                             required
-                            :disabled="me.useRobohash||me.useGravatar"
+                            :disabled="me.useMonsterID||me.useGravatar"
                           ></v-text-field>
                           <v-text-field
                               v-if="settings.details"
