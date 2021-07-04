@@ -6,7 +6,7 @@ Joker Poker
 **Features**
 
  * super easy to use - no fluff, just planning poker
- * no login, minimal setup - [create a team](https://culmat.github.io/joker-poker/) with a single click
+ * no login, minimal setup - **[create a team](https://culmat.github.io/joker-poker/)** with a single click
  * optional [gravatar](gravatar.com/) and [monsterID](https://www.splitbrain.org/projects/monsterid) integration to make your poker session a friendly place
  * data privacy - in the spirit of [unhosted](https://unhosted.org/), Joker Poker is as *serverless* as possible
    * all data is only stored locally in each participants browser
