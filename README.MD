@@ -14,7 +14,7 @@ Joker Poker
    * Mozilla's open source [TogetherJS](https://github.com/mozilla/togetherjs) is only used for communciaton between participants (NAT traversal)
    * We use the instance [maintained by JSFiddle and hosted on glitch](https://github.com/jsfiddle/togetherjs/issues/1172). You can [check the source code](http://togetherjs-hub.glitch.me/server-source), [check it again](https://glitch.com/edit/#!/togetherjs-hub), or host your own service.
  * optional [gravatar](gravatar.com/) and [monsterID](https://www.splitbrain.org/projects/monsterid) integration to make your poker session a friendly place
- * super simple and robust technology - it is really only one HTML and one Javascript file. No server side computing is done. You can save / host the page anywhere and it will work. 
+ * super simple and robust technology - it is really only one HTML and one Javascript file. It will work on any static webhost. 
 
 
 
