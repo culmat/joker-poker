@@ -19,4 +19,4 @@ Joker Poker
 
 **Don't love it?**
 
-[Change it](https://github.com/culmat/joker-poker/issues), or leave it for an alternative [poker-planning](https://github.com/topics/poker-planning), [planningpoker](https://github.com/topics/planning-poker) or [planningpoker](https://github.com/topics/planningpoker).
+[Change it](https://github.com/culmat/joker-poker/issues), or leave it for an alternative [poker-planning](https://github.com/topics/poker-planning), [planning-poker](https://github.com/topics/planning-poker) or [planningpoker](https://github.com/topics/planningpoker).
