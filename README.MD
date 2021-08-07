@@ -39,7 +39,7 @@ To make sure JokerPoker correctly detects that _all teammates have voted_ ...
 **Questions & Answers**
 
  * _How can we know what we estimate? Why can't I set a desciption / sync with my issue tracker <XYZ>?_ 
- * JokerPoker is meant to be used on a secondary ( mobile ) screen. We assume you use other communication channels like voice and screen sharing in parrallel. You physical stimation poker cards don't show the topic either. [😗](https://en.wikipedia.org/wiki/KISS_principle)
+ * JokerPoker is meant to be used on a secondary ( mobile ) screen. We assume you use other communication channels like voice and screen sharing in parrallel. You physical estimation poker cards don't show the topic either. [😗](https://en.wikipedia.org/wiki/KISS_principle)
 
 **Don't love it?**
 
