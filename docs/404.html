@@ -20,7 +20,7 @@
     <meta name="msapplication-navbutton-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="msapplication-starturl" content="https://github.com/culmat/joker-poker/">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
     <link rel="icon" type="image/svg+xml" href="https://culmat.github.io/joker-poker/joker-poker-logo.png">
     <link rel="apple-touch-icon" type="image/svg+xml" href="https://culmat.github.io/joker-poker/joker-poker-logo.png">
@@ -59,14 +59,14 @@
           <v-list-item
                 v-for="n in pages"
                 :key="n"
-                @click="(e) => {navigate(n[0],n[1]);}"
+                @click="(e) => {navigate(n[0],n[1]);drawer=false;}"
               >
               <v-list-item-action>
                   <v-icon :color="page == n[0] ? 'blue darken-2': ''">{{n[1]}}</v-icon>
                 </v-list-item-action>
                 <v-list-item-title>{{ n[0] }}</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="window.open('https://github.com/culmat/joker-poker');">
+              <v-list-item @click="window.open('https://github.com/culmat/joker-poker');drawer=false;">
               <v-list-item-action >
                   <v-icon>mdi-help</v-icon>
                 </v-list-item-action>
@@ -322,6 +322,25 @@
                             required
                             disabled
                           ></v-text-field>
+                            Teammates
+                            <v-radio-group v-model="session.selected">
+                      		<v-list>
+        					    <v-list-item v-for="(mate, id) in estimates">
+        					       <v-list-item-icon>
+										 <v-radio
+										        :key="id"
+										        :value="id"
+								                :label="mate.name"
+										      ></v-radio>
+                				  </v-list-item-icon>
+        						  <v-list-item-avatar>
+        					        <v-img :src="mate.image"></v-img>
+        					      </v-list-item-avatar>
+        					    </v-list-item>
+        					    </v-list>
+        					    </v-radio-group>
+                      			<v-btn
+                           @click="sendGoOffline()">Send offline</v-btn>
                       <v-form>
                       </v-card-text>
                       </v-card>

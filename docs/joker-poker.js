@@ -16,7 +16,8 @@ var app = new Vue({
     session : {
       name : 'Joker Poker',
       time : 0,
-      values : ["☕","1","2","3","5","13","20","40","?"]
+      values : ["☕","1","2","3","5","13","20","40","?"],
+	  selected: ""
     },
     me : {
       id: null,
@@ -214,6 +215,14 @@ var app = new Vue({
 	       this.estimates[mate].estimate = '';
 	    }
     },
+	sendGoOffline: function () {
+    	yai.send({goOffline : true});
+    },
+    goOffline: function () {
+	    const disconnect = (this.session.selected == this.me.id);
+		if(this.isLeader) this.session.selected = "";
+		if(disconnect) this.disconnect();
+	},
     sendReveal: function () {
     	yai.send({reveal : true});
     },
@@ -388,6 +397,8 @@ yai .addListener("clusterChange" , app.syncState)
     	  app.restart();
       } else if(data.reveal) {
     	  app.reveal();
+      } else if(data.goOffline) {
+    	  app.goOffline();
       } else {
         app.lastMessage = data;
       }
