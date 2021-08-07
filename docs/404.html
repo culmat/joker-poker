@@ -365,7 +365,7 @@
                     <v-card >
                       <v-card-text>
                       <v-radio-group v-model="myestimate" :mandatory="false">
-                        <v-radio
+                        <v-radio @click="estimateClicked()"
                           v-for="v in session.values"
                           :label="v"
                           :value="v"

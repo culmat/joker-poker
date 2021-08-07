@@ -101,7 +101,6 @@ var app = new Vue({
       		  this.watchDec();
        	  } else {
 	    	 if(this.myestimate!="") {
-	           this.navigate('Team');
 	           this.setEstimate(this.me.id, this.myestimate);
 	           yai.send({estimate : {id : this.me.id,  estimate : this.myestimate }});
 	         } else {
@@ -241,6 +240,9 @@ var app = new Vue({
     	window.onunload = null;
     	location.reload();
     },
+    estimateClicked : function(){
+		this.navigate('Team');
+	},
     connect: function (create) {
       this.connection.status = "connecting";
       yai.connect();
