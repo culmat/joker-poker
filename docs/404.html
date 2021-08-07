@@ -322,10 +322,11 @@
                             required
                             disabled
                           ></v-text-field>
+                            <div v-if="mateCount>0">
                             Teammates
                             <v-radio-group v-model="session.selected">
                       		<v-list>
-        					    <v-list-item v-for="(mate, id) in estimates">
+        					    <v-list-item v-for="(mate, id) in estimates" v-if="id!=me.id">
         					       <v-list-item-icon>
 										 <v-radio
 										        :key="id"
@@ -339,8 +340,9 @@
         					    </v-list-item>
         					    </v-list>
         					    </v-radio-group>
-                      			<v-btn
+                      			<v-btn :disabled="session.selected==null || session.selected==me.id"
                            @click="sendGoOffline()">Send offline</v-btn>
+                           </div>
                       <v-form>
                       </v-card-text>
                       </v-card>
@@ -380,10 +382,11 @@
                       </v-row>
                       </v-container>
                     </div>
+                    
                     <div v-if="page =='Me' && connected">
                     <v-card >
                       <v-card-text>
-                      <v-radio-group v-model="myestimate" :mandatory="false">
+                      <v-radio-group v-if="!me.observer" v-model="my.estimate" :mandatory="false">
                         <v-radio @click="estimateClicked()"
                           v-for="v in session.values"
                           :label="v"
@@ -391,9 +394,15 @@
                           >
                         </v-radio>
                       </v-radio-group>
+                      <div v-if="me.observer">
+                      As observer you do not figure in the list of teammates and thus can not cast an estimate.
+					        <br/><v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
+					  <v-btn @click="navigate('Team');">Back to Team</v-btn>      
+                      </div>
                       </v-card-text>
                       </v-card>
                     </div>
+                    
                     <div v-if="page =='QR' && connected">
                     	<v-card>
                      		 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL" height="600" contain></v-img>
@@ -417,6 +426,38 @@
                          </v-card-actions>
                         </v-card>
                     </div>
+                    
+                     <v-dialog v-model="idleDialog"
+					      persistent
+					      max-width="1000"
+					    >
+					    <v-card>
+					        <v-card-title class="text-h5">
+					            You seem to be idle
+					        </v-card-title>
+					        <v-card-text>You have not participated in estimation for at least {{my.missedRounds}} rounds and are now an observer.
+					        <br/>As observer you do not figure in the list of teammates and thus can not cast an estimate.
+					        <br/>You can change this anytime under <v-btn plain @click="navigate('Settings');">Settings</v-btn>.</v-card-text>
+					        <v-card-actions>
+					          <v-spacer></v-spacer>
+					          <v-btn
+					            color="green darken-1"
+					            text
+					            @click="my.missedRounds=0"
+					          >
+					            I keep observing
+					          </v-btn>
+					          <v-btn
+					            color="green darken-1"
+					            text
+					            @click="my.missedRounds=0;me.observer=false"
+					          >
+					            I'm back to estimate
+					          </v-btn>
+					        </v-card-actions>
+					      </v-card>
+					    </v-dialog>
+                    
                     </v-main>
     </v-app>
     </div>

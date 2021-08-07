@@ -8,7 +8,10 @@ var app = new Vue({
   data : {
 	drawer : false,
 	disableWatch : 0,
-    myestimate : '',
+    my: {
+		estimate : '',
+		missedRounds : 0
+	},
     sessionIdInput : '',
     dialog : false,
     sessionId : null,
@@ -52,10 +55,22 @@ var app = new Vue({
     pageIcon : 'mdi-account-multiple',
   },
   computed: {
+	idleDialog : function() {
+		return this.my.missedRounds >1;
+	},
     estimateCount: function () {
       var count = 0;
       for (var mate in this.estimates) {
         if(this.estimates[mate].estimate != '') {
+          count++;
+        }
+      }
+      return count;
+    },
+    mateCount: function () {
+      var count = 0;
+      for (var mate in this.estimates) {
+		if(this.me.id != mate) {
           count++;
         }
       }
@@ -96,16 +111,16 @@ var app = new Vue({
     }
   },
   watch: {
-    myestimate: {
+    'my.estimate': {
        handler(){
     	   if(this.disableWatch) {
       		  this.watchDec();
        	  } else {
-	    	 if(this.myestimate!="") {
-	           this.setEstimate(this.me.id, this.myestimate);
-	           yai.send({estimate : {id : this.me.id,  estimate : this.myestimate }});
+	    	 if(this.my.estimate!="") {
+	           this.setEstimate(this.me.id, this.my.estimate);
+	           yai.send({estimate : {id : this.me.id,  estimate : this.my.estimate }});
 	         } else {
-	           this.navigate('Me');
+	           if(!this.me.observer) this.navigate("Me");
 	         }
        	  }
        }
@@ -205,12 +220,13 @@ var app = new Vue({
     join: function (create) {
       this.sessionId = yai.setSessionId(create ? yai.uuid() : this.sessionIdInput);
       this.connect();
+	  this.my.missedRounds = 0;
     },
     sendRestart: function () {
     	yai.send({restart : true});
     },
     restart: function () {
-		this.myestimate = "";
+		this.my.estimate = "";
 		for (var mate in this.estimates) {
 	       this.estimates[mate].estimate = '';
 	    }
@@ -227,10 +243,12 @@ var app = new Vue({
     	yai.send({reveal : true});
     },
     reveal: function () {
-    	if(this.myestimate == "" && !this.me.observer) {
+    	if(this.my.estimate == "" && !this.me.observer) {
     		this.watchInc();
-    		this.myestimate = "?";
-    	}
+    		this.my.estimate = "?";
+			this.my.missedRounds++;
+			this.me.observer = this.idleDialog;
+		}
     	for (var mate in this.estimates) {
     		if(this.estimates[mate].estimate == '')
     			this.estimates[mate].estimate = '?';
@@ -250,6 +268,7 @@ var app = new Vue({
     	location.reload();
     },
     estimateClicked : function(){
+		this.my.missedRounds = 0;
 		this.navigate('Team');
 	},
     connect: function (create) {
@@ -287,7 +306,7 @@ var app = new Vue({
       this.isLeader = yai.isLeader;
     },
     sendMate : function() {
-      yai.send({mate : Object.assign(this.me, {estimate : this.myestimate, yaiID : this.yaiID})})
+      yai.send({mate : Object.assign(this.me, {estimate : this.my.estimate, yaiID : this.yaiID})})
     },
     removeMate : function(yaiID) {
       for (var mate in this.estimates) {
