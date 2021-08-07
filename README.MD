@@ -32,15 +32,15 @@ If needed a teammate can be send offline be anybody under _Settings_.
  * mobile friendly - including integrated ![](https://raw.githubusercontent.com/Templarian/MaterialDesign-SVG/master/svg/qrcode.svg) QR code generator 
  * data privacy - in the spirit of [unhosted](https://unhosted.org/), Joker Poker is as *serverless* as possible
    * all data is only stored locally in each participants browser
-   * Mozilla's open source [TogetherJS](https://github.com/mozilla/togetherjs) is only used for communciaton between participants (NAT traversal)
+   * Mozilla's open source [TogetherJS](https://github.com/mozilla/togetherjs) is only used for communication between participants (NAT traversal)
    * We use the instance [maintained by JSFiddle and hosted on glitch](https://github.com/jsfiddle/togetherjs/issues/1172). You can [check the source code](http://togetherjs-hub.glitch.me/server-source), [check it again](https://glitch.com/edit/#!/togetherjs-hub), or host your own service.
  * optional [gravatar](gravatar.com/) and [monsterID](https://www.splitbrain.org/projects/monsterid) integration to make your poker session a friendly place
- * super simple and robust technology - it is really only one HTML and one Javascript file. It will work on any static webhost. 
+ * super simple and robust technology - it is really only one HTML and one JavaScript file. It will work on any static web host. 
 
 **Questions & Answers**
 
- * _How can we know what we estimate? Why can't I set a desciption / sync with my issue tracker <XYZ>?_ 
- * JokerPoker is meant to be used on a secondary ( mobile ) screen. We assume you use other communication channels like voice and screen sharing in parrallel. You physical estimation poker cards don't show the topic either. [😗](https://en.wikipedia.org/wiki/KISS_principle)
+ * _How can we know what we estimate? Why can't I set a description / sync with my issue tracker <XYZ>?_ 
+ * JokerPoker is meant to be used on a secondary ( mobile ) screen. We assume you use other communication channels like voice and screen sharing in parallel. You physical estimation poker cards don't show the topic either. [😗](https://en.wikipedia.org/wiki/KISS_principle)
 
 **Don't love it?**
 
