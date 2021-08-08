@@ -243,12 +243,12 @@ var app = new Vue({
     	yai.send({reveal : true});
     },
     reveal: function () {
-    	if(this.my.estimate == "" && !this.me.observer) {
-    		this.watchInc();
-    		this.my.estimate = "?";
-			this.my.missedRounds++;
-			this.me.observer = this.idleDialog;
-		}
+    	if (this.my.estimate == "" && (!this.me.observer || this.idleDialog)) {
+	        this.watchInc();
+	        this.my.estimate = "?";
+	        this.my.missedRounds++;
+	        this.me.observer = this.idleDialog;
+        }
     	for (var mate in this.estimates) {
     		if(this.estimates[mate].estimate == '')
     			this.estimates[mate].estimate = '?';

@@ -443,14 +443,14 @@
 					          <v-btn
 					            color="green darken-1"
 					            text
-					            @click="my.missedRounds=0"
+					            @click="my.missedRounds=0;navigate('Team');"
 					          >
 					            I keep observing
 					          </v-btn>
 					          <v-btn
 					            color="green darken-1"
 					            text
-					            @click="my.missedRounds=0;me.observer=false"
+					            @click="my.missedRounds=0;me.observer=false;navigate('Me');"
 					          >
 					            I'm back to estimate
 					          </v-btn>
