@@ -304,6 +304,13 @@ var app = new Vue({
     syncState: function (create) {
       this.clusterState = yai.clusterState;
       this.isLeader = yai.isLeader;
+      for (var mate in this.estimates) {
+        const m = this.estimates[mate];
+        const myaiID = m.yaiID;
+        if(!yai.clusterState.nodes.includes(myaiID)) {
+          Vue.delete(this.estimates, m.id);
+        }
+      }
     },
     sendMate : function() {
       yai.send({mate : Object.assign(this.me, {estimate : this.my.estimate, yaiID : this.yaiID})})
