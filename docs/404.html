@@ -406,6 +406,7 @@
                     <div v-if="page =='QR' && connected">
                     	<v-card>
                      		 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL" height="600" contain></v-img>
+                     		 <v-card-text class="text-center">{{sessionId}}</v-card-text>
                      	</v-card>
                     		
                     </div>
