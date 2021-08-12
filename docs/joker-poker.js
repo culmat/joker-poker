@@ -171,6 +171,14 @@ var app = new Vue({
     },
   },
   methods: {
+	removeStale(){
+		for (var mate in this.estimates) {
+	        const m = this.estimates[mate];
+	        if(!this.clusterState.nodes.includes(m.yaiID)) {
+	          	Vue.delete(this.estimates, m.id);
+	        }
+      	}
+	},
 	isJoker(c){
 		return c == "?" || c == "🃏";
 	},  
@@ -387,6 +395,7 @@ yai.setSessionId = function (id) {
 yai .addListener("clusterChange" , app.syncState)
     .addListener("onboard" , function() {
       this.send({session : app.session});
+	  app.removeStale();
       this.send({estimates : app.estimates});
     })
     .addListener("connect" , function() {
