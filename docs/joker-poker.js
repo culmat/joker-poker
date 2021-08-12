@@ -160,6 +160,9 @@ var app = new Vue({
     	  }
       }
     },
+	'session.name'(sessionName){
+	   document.title = sessionName;
+   	},
     session: {
     	deep: true,
     	handler(){
