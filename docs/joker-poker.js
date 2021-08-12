@@ -108,7 +108,10 @@ var app = new Vue({
       const o = {}
       app.session.values.forEach((v,i) => o[v] = app.isJoker(v)?1.3:(i+1));
       return o;
-    }
+    },
+	large: function () { 
+        return this.$vuetify.breakpoint.name.includes('l');
+	}
   },
   watch: {
     'my.estimate': {

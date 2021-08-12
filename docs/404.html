@@ -59,14 +59,14 @@
           <v-list-item
                 v-for="n in pages"
                 :key="n"
-                @click="(e) => {navigate(n[0],n[1]);drawer=false;}"
+                @click="(e) => {navigate(n[0],n[1]);drawer=large;}"
               >
               <v-list-item-action>
                   <v-icon :color="page == n[0] ? 'blue darken-2': ''">{{n[1]}}</v-icon>
                 </v-list-item-action>
                 <v-list-item-title>{{ n[0] }}</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="window.open('https://github.com/culmat/joker-poker');drawer=false;">
+              <v-list-item @click="window.open('https://github.com/culmat/joker-poker');drawer=large;">
               <v-list-item-action >
                   <v-icon>mdi-help</v-icon>
                 </v-list-item-action>
@@ -79,8 +79,10 @@
             color="primary"
             dark
             dense
-          >
-            <v-icon>{{pageIcon}}</v-icon>
+          > 
+	          <v-btn icon @click="drawer=!drawer">
+	            	<v-icon>{{pageIcon}}</v-icon>
+	          </v-btn>
             <v-toolbar-title>&nbsp;{{session.name}}</v-toolbar-title>
 
             <v-spacer></v-spacer>
