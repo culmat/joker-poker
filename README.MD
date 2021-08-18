@@ -21,7 +21,7 @@ If any teammate presses _Restart_ the _team starts voting_.
 To make sure JokerPoker correctly detects that _all teammates have voted_ ...
 
 1) set yourself as _observer_ when you are not voting. You can do so from the ![](https://raw.githubusercontent.com/Templarian/MaterialDesign-SVG/master/svg/cog.svg) _Settings_ screen or when joining a team
-1) Disonnect yourself when away from the screen - your facilitator will rebuke you a little less 😏 and it's only one click
+1) ![](https://raw.githubusercontent.com/Templarian/MaterialDesign-SVG/master/svg/wifi-off.svg) Disonnect yourself when away from the screen - your facilitator will rebuke you a little less 😏 and it's only one click
 
 If needed a teammate can be send offline be anybody under _Settings_. 
 
