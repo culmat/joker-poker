@@ -19,7 +19,7 @@ var app = new Vue({
     session : {
       name : 'Joker Poker',
       time : 0,
-      values : ["☕","1","2","3","5","13","20","40","?"],
+      values : ["☕","1","2","3","5","8","13","20","40","?"],
 	  selected: ""
     },
     me : {
