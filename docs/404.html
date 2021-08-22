@@ -166,36 +166,44 @@
                                       <v-container>
                                         <v-row>
                                           <v-col cols="12">
-                                            <!-- TODO re-factor this form is a copy of the settings page -->
                                             <v-form>
-						                      	<v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
-						                      	<v-switch v-model="me.useGravatar" class="ma-2" label="Use gravatar"></v-switch>
-						                        <v-switch v-if="!me.useGravatar" v-model="me.useMonsterID" class="ma-2" label="Use monsterID"></v-switch>
-						                        <v-text-field
-						                            v-model="me.gravatar"
-						                            label="Gravatar account"
-						                            required
-						                            v-if="me.useGravatar"
-						                          ></v-text-field>
 						                        <v-text-field
 						                            v-model="me.name"
 						                            label="Name"
 						                            required
 						                            :disabled="me.useGravatar"
+						                            ref="myName"
+						                            autofocus
 						                          ></v-text-field>
-						                        <v-text-field
-						                            v-model="me.image"
-						                            label="Image"
-						                            required
-						                            :disabled="me.useMonsterID||me.useGravatar"
-						                          ></v-text-field>
-						                          <v-text-field
-						                              v-if="settings.details"
-						                              v-model="me.id"
-						                              label="ID"
-						                              required
-						                              disabled
-						                            ></v-text-field>
+						                        <v-expansion-panels accordion>
+											      <v-expansion-panel>
+											        <v-expansion-panel-header>Details</v-expansion-panel-header>
+											        <v-expansion-panel-content>
+											        	<v-text-field
+								                            v-model="me.gravatar"
+								                            label="Gravatar account"
+								                            required
+								                            v-if="me.useGravatar"
+								                            autofocus
+								                          ></v-text-field>
+								                      	<v-switch v-model="me.observer" class="ma-2" label="I am not estimating"></v-switch>
+								                      	<v-switch v-model="me.useGravatar" class="ma-2" label="Use gravatar"></v-switch>
+								                        <v-switch v-if="!me.useGravatar" v-model="me.useMonsterID" class="ma-2" label="Use monsterID"></v-switch>
+								                        <v-text-field
+								                            v-model="me.image"
+								                            label="Image"
+								                            required
+								                            :disabled="me.useMonsterID||me.useGravatar"
+								                          ></v-text-field>
+								                         <v-avatar size="33" >
+											                  <img
+											                    :src="me.image"
+											                    :alt="me.name"
+											                  >
+											                </v-avatar>
+											        </v-expansion-panel-content>
+											      </v-expansion-panel>
+											    </v-expansion-panels>
 						                      <v-form>
                       
                                           </v-col>
@@ -274,7 +282,7 @@
                       <v-card-title>Me</v-card-title>
                       <v-card-text>
                       <v-form>
-                      	<v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
+                      	<v-switch v-model="me.observer" class="ma-2" label="I am not estimating"></v-switch>
                       	<v-switch v-model="me.useGravatar" class="ma-2" label="Use gravatar"></v-switch>
                         <v-switch v-if="!me.useGravatar" v-model="me.useMonsterID" class="ma-2" label="Use monsterID"></v-switch>
                         <v-text-field
@@ -411,8 +419,8 @@
                       
                       
                       <div v-if="me.observer">
-                      As observer you do not figure in the list of teammates and thus can not cast an estimate.
-					        <br/><v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>
+                      As observer you do not figure in the list of team mates and thus can not cast an estimate.
+					        <br/><v-switch v-model="me.observer" class="ma-2" label="I am not estimating"></v-switch>
 					  <v-btn @click="navigate('Team');">Back to Team</v-btn>      
                       </div>
                       </v-card-text>
