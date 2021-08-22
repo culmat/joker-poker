@@ -35,6 +35,12 @@
 		.v-main__wrap > div:nth-child(2) {
 			margin-top: 24px;
 		}
+		.v-chip.v-size--large {
+			width: 46px;
+			text-align: center;
+			display: inline;
+			box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.2), 6px 6px 20px 0 rgba(0, 0, 0, 0.19);
+		}
 	</style>
   </head>
   <body>
@@ -224,18 +230,18 @@
                             <v-chip v-if="id!=me.id"
                               :outlined="mate.estimate==''"
                               :color="getColor(mate.estimate, '')"
-                            ><v-avatar left v-if="mate.estimate!='' && !estimateDone">
-                              <v-icon>mdi-checkbox-marked-circle</v-icon>
-                            </v-avatar>
+                              large
+                              label
+                            >
                             <b>{{estimateDone ? mate.estimate : ""}}</b></v-chip>
 
                             <v-chip v-if="id==me.id"
                               :outlined="mate.estimate==''"
                               :color="getColor(mate.estimate,'primary')"
+                              large
+                              label
                               @click="navigate('Me')"
-                            ><v-avatar left v-if="mate.estimate!='' && !estimateDone">
-                              <v-icon>mdi-checkbox-marked-circle</v-icon>
-                            </v-avatar>
+                            >
                             <b>{{mate.estimate}}</b></v-chip>
 
                 				  </v-list-item-icon>
@@ -388,14 +394,23 @@
                     <div v-if="page =='Me' && connected">
                     <v-card >
                       <v-card-text>
-                      <v-radio-group v-if="!me.observer" v-model="my.estimate" :mandatory="false">
-                        <v-radio @click="estimateClicked()"
-                          v-for="v in session.values"
-                          :label="v"
-                          :value="v"
-                          >
-                        </v-radio>
-                      </v-radio-group>
+                      
+                      
+                       <v-list v-if="!me.observer">
+        					    <v-list-item v-for="v in session.values">
+        					       <v-list-item-icon>
+
+                            <v-chip @click="estimateClicked(v)"
+                              large
+                              label
+                              outlined
+                              color="primary"
+                            >  <b>{{v}}</b></v-chip>
+                      		 </v-list-item-icon>
+                      		</v-list-item>
+                      	</v-list>
+                      
+                      
                       <div v-if="me.observer">
                       As observer you do not figure in the list of teammates and thus can not cast an estimate.
 					        <br/><v-switch v-model="me.observer" class="ma-2" label="I am observing"></v-switch>

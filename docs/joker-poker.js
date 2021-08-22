@@ -281,7 +281,8 @@ var app = new Vue({
     	window.onunload = null;
     	location.reload();
     },
-    estimateClicked : function(){
+    estimateClicked : function(v){
+		this.my.estimate = v;
 		this.my.missedRounds = 0;
 		this.navigate('Team');
 	},
@@ -346,6 +347,8 @@ function loadRandomuserMe(){
     .catch(function (error) {
       // handle error
       console.log(error);
+		app.watchInc()
+    	app.me.name = "NoBody_"+ new Date().getTime();;
     })
 }
 
@@ -362,19 +365,7 @@ function loadLocalData(){
 	app.watchInc()
 	app.me = data.me;
   } else if(app.me.name == ""){
-    axios.get('https://namey.muffinlabs.com/name.json?count=1&with_surname=false&frequency=all')
-      .then(function (response) {
-        app.me.name = response.data[0];
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-        loadRandomuserMe();
-      })
-     .then(function () {
-       if(app.me.name =="") app.me.name = new Date().getTime()
-     });
-
+    loadRandomuserMe();
   }
   app.me.id = app.me.id || "m"+yai.uuid("");
   if(!app.me.observer) Vue.set(app.estimates, app.me.id, app.me);
