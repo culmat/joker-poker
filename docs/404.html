@@ -224,7 +224,7 @@
                     <div v-if="page =='Team' && connected">
         					  <v-card>
         					  <v-list>
-        					    <v-list-item v-for="(mate, id) in estimates">
+        					    <v-list-item v-for="(mate, id) in estimates" :disabled="id!=me.id"  @click="if(id==me.id) navigate('Me');">
         					       <v-list-item-icon>
 
                             <v-chip v-if="id!=me.id"
@@ -240,7 +240,6 @@
                               :color="getColor(mate.estimate,'primary')"
                               large
                               label
-                              @click="navigate('Me')"
                             >
                             <b>{{mate.estimate}}</b></v-chip>
 
@@ -397,10 +396,10 @@
                       
                       
                        <v-list v-if="!me.observer">
-        					    <v-list-item v-for="v in session.values">
+        					    <v-list-item v-for="v in session.values" @click="estimateClicked(v)">
         					       <v-list-item-icon>
 
-                            <v-chip @click="estimateClicked(v)"
+                            <v-chip 
                               large
                               label
                               outlined
