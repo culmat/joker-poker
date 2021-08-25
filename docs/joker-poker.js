@@ -243,6 +243,7 @@ var app = new Vue({
 		for (var mate in this.estimates) {
 	       this.estimates[mate].estimate = '';
 	    }
+		this.navigate('Me');
     },
 	sendGoOffline: function () {
     	yai.send({goOffline : true});

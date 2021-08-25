@@ -255,7 +255,7 @@
         					    </v-list>
         					     <v-card-actions>
                       				  <v-btn :disabled="estimateProgress == 100 || estimateProgress == 0" @click="sendReveal()">Reveal</v-btn>
-				                      <v-btn :disabled="estimateCount == 0" @click="sendRestart()">Restart</v-btn>
+				                      <v-btn @click="sendRestart()">{{estimateCount == 0 ? 'Start' : 'Restart'}}</v-btn>
         					     </v-card-actions>
         					    </v-card>
                       <br/>
