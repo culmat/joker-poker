@@ -137,7 +137,8 @@
                         <v-row justify="center">
                                 <v-dialog v-model="dialog" persistent max-width="600px">
                                 
-                                   <v-container dense>
+                                   <v-container dense> 
+                                   <v-form @submit.prevent="join(!sessionId);navigate();dialog = false;">
 							      <v-row>
 							        <v-col cols="12" v-if="!sessionId">
                                 <v-card>
@@ -148,7 +149,7 @@
                                       <v-container>
                                         <v-row>
                                           <v-col cols="12">
-                                            <v-text-field v-model="session.name" label="Name" required v-if="!sessionId"></v-text-field>
+                                            <v-text-field v-model="session.name" label="Name" autofocus required v-if="!sessionId"></v-text-field>
                                             </v-col>
                                         </v-row>
                                       </v-container>
@@ -166,14 +167,13 @@
                                       <v-container>
                                         <v-row>
                                           <v-col cols="12">
-                                            <v-form>
 						                        <v-text-field
 						                            v-model="me.name"
 						                            label="Name"
 						                            required
 						                            :disabled="me.useGravatar"
 						                            ref="myName"
-						                            autofocus
+						                            :autofocus="!!sessionId"
 						                          ></v-text-field>
 						                        <v-expansion-panels accordion>
 											      <v-expansion-panel>
@@ -204,27 +204,20 @@
 											        </v-expansion-panel-content>
 											      </v-expansion-panel>
 											    </v-expansion-panels>
-						                      <v-form>
                       
                                           </v-col>
                                         </v-row>
                                       </v-container>
                                     </v-card-text>
-                                    <v-card-actions v-if="sessionId">
+                                    <v-card-actions>
                                       <v-spacer></v-spacer>
-                                      <v-btn color="primary" @click="dialog = false;navigate('Team');">Join</v-btn>
+                                      		<v-btn type="submit" color="primary" >{{sessionId?'Join':'Create'}}</v-btn>
                                     </v-card-actions>
                                   </v-card>
                                   </v-col>
-                                  <v-col cols="12" v-if="!sessionId">
                                   <v-card>
-                                  <v-card-actions>
-                                      <v-spacer></v-spacer>
-                                      <v-btn color="primary" @click="dialog = false;join(true);" v-if="!sessionId">Create</v-btn>
-                                    </v-card-actions>
-                                    </v-card>
-                                    </v-col>
                                   </v-row>
+						                <v-form>
                                   </v-container>
                                 </v-dialog>
                               </v-row>

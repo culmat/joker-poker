@@ -12,7 +12,6 @@ var app = new Vue({
 		estimate : '',
 		missedRounds : 0
 	},
-    sessionIdInput : '',
     dialog : false,
     sessionId : null,
     settings : {detailed : false},
@@ -232,7 +231,7 @@ var app = new Vue({
 		 return (v == this.estimateMin || v == this.estimateMax) ? "orange" : "";
 	},
     join: function (create) {
-      this.sessionId = yai.setSessionId(create ? yai.uuid() : this.sessionIdInput);
+      this.sessionId = yai.setSessionId(create ? yai.uuid(): this.sessionId);
       this.connect();
 	  this.my.missedRounds = 0;
     },
@@ -383,9 +382,10 @@ window.onunload  = function(){
 
 yai.getSessionId = function() {return app.sessionId;};
 yai.setSessionId = function (id) {
-    app.sessionId = id;
+	console.log("setSessionId", id)    
+	app.sessionId = id;
     loadLocalData();
-    app.navigate();
+    app.navigate.bind(app)();
 	return id;
 };
 
@@ -441,14 +441,10 @@ yai .addListener("clusterChange" , app.syncState)
   if (path) {
     var tokens =  path.split("/");
     app.sessionId = tokens[0];
-    app.navigate(tokens[1] || "Team");
-  }
-  if(app.sessionId){
-	  app.dialog = !loadLocalData();
-	  app.connect();
-	  // go to default page
-	  app.navigate();
-  }  else {
+	app.dialog = !loadLocalData();
+	app.connect.bind(app)();
+    app.navigate.bind(app)(tokens[1] || "Team");
+  } else {
 	  app.dialog = true;
 	  loadLocalData();
   }
