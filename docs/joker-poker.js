@@ -287,6 +287,7 @@ var app = new Vue({
 		this.navigate('Team');
 	},
     connect: function (create) {
+	  if(this.connected) return;
       this.connection.status = "connecting";
       yai.connect();
     },
@@ -307,6 +308,7 @@ var app = new Vue({
       }
     },
     disconnect: function (create) {
+	  if(!this.connected) return;
       this.connection.auto = false;
       yai.disconnect();
     },
