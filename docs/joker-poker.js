@@ -45,6 +45,7 @@ var app = new Vue({
     isLeader : false,
     yaiID : yai.createdAt,
     teamIcon: 'mdi-account-multiple',
+    qrIcon: 'mdi-qrcode',
     pages : [
       ['Team' , 'mdi-account-multiple'] ,
       ['Me' , 'mdi-account'],
