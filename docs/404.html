@@ -138,7 +138,7 @@
                                 <v-dialog v-model="dialog" persistent max-width="600px">
                                 
                                    <v-container dense> 
-                                   <v-form @submit.prevent="join(!sessionId);navigate();dialog = false;">
+                                   <v-form @submit.prevent="join(!sessionId);navigate(mateCount?'Team':'QR');dialog = false;">
 							      <v-row>
 							        <v-col cols="12" v-if="!sessionId">
                                 <v-card>
@@ -423,7 +423,11 @@
                     <div v-if="page =='QR' && connected">
                     	<v-card>
                      		 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL" height="600" contain></v-img>
-                     		 <v-card-text class="text-center">{{sessionId}}</v-card-text>
+                     		 <v-card-text class="text-center"><a :href="sessionURL">{{sessionURL}}</a><br/>
+                     		 <span v-if="mateCount==1">You have a mate.</span>
+                     		 <span v-if="mateCount>1">You have {{mateCount}} mates.</span>
+                     		 <span v-if="!mateCount">You seem to be the first around here. Invite some mates.</span>
+                     		 </v-card-text>
                      	</v-card>
                     		
                     </div>
