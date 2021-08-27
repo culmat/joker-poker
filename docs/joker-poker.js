@@ -233,6 +233,7 @@ var app = new Vue({
 		 return (v == this.estimateMin || v == this.estimateMax) ? "orange" : "";
 	},
     join: function (create) {
+	  this.drawer = this.large;
       this.sessionId = yai.setSessionId(create ? yai.uuid(): this.sessionId);
       this.connect();
 	  this.my.missedRounds = 0;
@@ -365,6 +366,9 @@ function loadLocalData(){
 		app.watchInc()
 		app.session = data.session;
   }
+  if(data && data.drawer && app.large) {
+	app.drawer = true;
+  }
   if(data && data.me) {
 	app.watchInc()
 	app.me = data.me;
@@ -381,7 +385,8 @@ window.onunload  = function(){
 	localStorage.setItem(app.sessionId, JSON.stringify({
     session : app.session,
     me : app.me,
-    settings : app.settings
+    settings : app.settings,
+    drawer : app.drawer
   }));
 };
 
