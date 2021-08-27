@@ -44,6 +44,7 @@ var app = new Vue({
     clusterState : {"leader" : "?", "nodes" : []},
     isLeader : false,
     yaiID : yai.createdAt,
+    teamIcon: 'mdi-account-multiple',
     pages : [
       ['Team' , 'mdi-account-multiple'] ,
       ['Me' , 'mdi-account'],

@@ -428,6 +428,12 @@
                      		 <span v-if="mateCount>1">You have {{mateCount}} mates.</span>
                      		 <span v-if="!mateCount">You seem to be the first around here. Invite some mates.</span>
                      		 </v-card-text>
+                     		 <v-card-actions v-if="mateCount">
+                     		 	 <v-spacer></v-spacer>
+                     		 	<v-btn @click="navigate('Team')"><v-icon >{{teamIcon}}</v-icon>Team</v-btn>
+                     		 	<v-btn @click="sendRestart()">{{estimateCount == 0 ? 'Start' : 'Restart'}}</v-btn>
+                     		 	 <v-spacer></v-spacer>
+                     		 </v-card-actions>
                      	</v-card>
                     		
                     </div>
