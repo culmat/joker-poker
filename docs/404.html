@@ -258,7 +258,8 @@
         					     </v-card-text>
         					     <v-card-actions>
                       				  <v-btn :disabled="estimateProgress == 100 || estimateProgress == 0" @click="sendReveal()">Reveal</v-btn>
-				                      <v-btn @click="sendRestart()">{{estimateCount == 0 ? 'Start' : 'Restart'}}</v-btn>
+                      				  &nbsp;&nbsp;&nbsp;
+				                      <v-btn @click="sendRestart()">{{estimateCount == 0 ? 'Start' : 'Restart'}}</v-btn>&nbsp;
 				                      <v-spacer></v-spacer>
 				                      <v-btn v-if="!mateCount" color="primary" @click="navigate('QR')"><v-icon >{{qrIcon}}</v-icon>Invite some mates.</v-btn>
         					     </v-card-actions>
