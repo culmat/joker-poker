@@ -29,7 +29,7 @@ var app = new Vue({
       useGravatar : false,
       image : "",
       observer : false,
-      autoConnectInterval : 5,
+      autoConnectInterval : 3,
       navSrc : "",
     },
     estimates : {
