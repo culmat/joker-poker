@@ -7,6 +7,12 @@ var app = new Vue({
   vuetify: new Vuetify(),
   data : {
 	drawer : false,
+	snackbar : {
+		visible: false,
+		timeout : 2000,
+		color : "green",
+		content : ""
+	},
 	disableWatch : 0,
     my: {
 		estimate : '',
@@ -226,6 +232,22 @@ var app = new Vue({
 	    });
 		
 	},
+	snack: function (content, color, timeout) {
+		this.snackbar.content = content;
+		this.snackbar.timeout = timeout;
+		this.snackbar.color = color;
+		this.snackbar.visible = true;
+	},
+		
+	copyToClipBoard: function (text) {
+		var copyText = document.getElementById('clipTmp');
+		copyText.value= text;
+		copyText.select();
+		copyText.setSelectionRange(0, 99999); /* For mobile devices */
+		navigator.clipboard.writeText(copyText.value);
+		this.snack("Copied to clipboard", "green", 1500);
+    },
+
 	getColor: function (estimate, fallback) {
 		 if(!this.estimateDone || this.isJoker(estimate)) return fallback;
 		 if(this.estimateMin == this.estimateMax) return "light-green";

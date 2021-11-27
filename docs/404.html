@@ -429,7 +429,9 @@
                     <div v-if="page =='QR' && connected">
                     	<v-card>
                      		 <v-img :src="'https://target.baloise.ch/byod-api/rest/qr/600/'+sessionURL" height="600" contain></v-img>
-                     		 <v-card-text class="text-center"><a :href="sessionURL">{{sessionURL}}</a><br/>
+                     		 <v-card-text class="text-center"><a :href="sessionURL">{{sessionURL}}</a>
+                     		    <v-btn icon title="Copy link to clipboard" @click="copyToClipBoard(sessionURL)"><v-icon >mdi-content-copy</v-icon></v-btn>
+                     		 <br/> 
                      		 <span v-if="mateCount==1">You have a mate.</span>
                      		 <span v-if="mateCount>1">You have {{mateCount}} mates.</span>
                      		 <span v-if="!mateCount">You seem to be the first around here. Invite some mates.</span>
@@ -491,11 +493,27 @@
 					        </v-card-actions>
 					      </v-card>
 					    </v-dialog>
-                    
+                    <v-snackbar
+					      v-model="snackbar.visible"
+					      :timeout="snackbar.timeout"
+					      :color="snackbar.color"
+					    >
+					      {{snackbar.content}}
+					
+					      <template v-slot:action="{ attrs }">
+					        <v-btn
+					          text
+					          v-bind="attrs"
+					          @click="snackbar.visible = false"
+					        >
+					          Close
+					        </v-btn>
+					      </template>
+					    </v-snackbar>
                     </v-main>
     </v-app>
     </div>
-
+	<input type="text" value="" id="clipTmp" hidden/>
     <script src="https://baloise.github.io/MobRank/youandi.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
