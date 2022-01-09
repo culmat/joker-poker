@@ -1,3 +1,23 @@
+![We have moved](https://cdn.vectorstock.com/i/preview-1x/64/35/we-have-moved-vintage-rusty-metal-sign-vector-19026435.jpg)
+
+***This is version of Joker Poker is discontinued***
+
+Please head over to https://codeberg.org/culmat/joker-poker/src/branch/main/README.md
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
 ## <img src="https://culmat.github.io/joker-poker/joker-poker-logo.svg" align="left" height="48" width="48" >
 Joker Poker
 
